@@ -1,0 +1,17 @@
+#nav-list a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#nav-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

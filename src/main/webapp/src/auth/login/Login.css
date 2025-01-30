@@ -1,0 +1,12 @@
+.login-form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 20px 10%;
+    align-items: center;
+}
+
+.login-form div, button, a {
+    max-width: 600px;
+    width: 100%;
+}

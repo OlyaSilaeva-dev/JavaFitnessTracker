@@ -1,0 +1,9 @@
+-- INSERT INTO product (id, name, calories, proteins, fats, carbohydrates)
+-- VALUES (0, 'Банан', 100, 1.2, 0.1, 22.4);
+-- INSERT INTO product (id, name, calories, proteins, fats, carbohydrates)
+-- VALUES (1, 'Картошка', 240, 6, 1.2, 54.3);
+--
+-- INSERT INTO exercise (id, name, calories, intensity)
+-- VALUES (0, 'Бег трусцой', 670, 'LIGHT');
+-- INSERT INTO exercise (id, name, calories, intensity)
+-- VALUES (1, 'Прыжки на скакалке', 600, 'LIGHT')
