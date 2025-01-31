@@ -5,7 +5,6 @@ import {Alert, Button, Container, Form, FormGroup,Spinner} from "react-bootstrap
 const Product = () => {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]); // Отфильтрованные продукты
-    const [selectedProduct, setSelectedProduct] = useState("");
     const [searchQuery, setSearchQuery] = useState(""); // Поле поиска
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -65,7 +64,7 @@ const Product = () => {
             </div>
 
             <FormGroup className="mb-3">
-                <Form.Label>Поиск</Form.Label>
+                <Form.Label>Поиск:</Form.Label>
                 <Form.Control
                     type="text"
                     placeholder="Введите название продукта..."

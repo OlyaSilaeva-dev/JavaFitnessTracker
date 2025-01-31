@@ -1,6 +1,7 @@
 package com.example.JavaFitnessTracker.controllers;
 
 import com.example.JavaFitnessTracker.dto.product.ProductRequest;
+import com.example.JavaFitnessTracker.dto.product.ProductResponse;
 import com.example.JavaFitnessTracker.entity.Product;
 import com.example.JavaFitnessTracker.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String productInfo(@PathVariable Long id, Model model) {
-        model.addAttribute("product", productService.getProductById(id));
-        model.addAttribute("image", productService.getProductById(id).getImage());
-        return "product-info";
+    public ResponseEntity<ProductResponse> productInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(new ProductResponse(productService.getProductById(id)));
     }
 
 //    @PostMapping("/{id}/upload")

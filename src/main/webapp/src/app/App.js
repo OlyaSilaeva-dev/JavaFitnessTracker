@@ -7,6 +7,7 @@ import AdminPanel from "../admin/AdminPanel";
 import Register from "../auth/register/Register";
 import Product from "../pages/products/Product";
 import NewProduct from "../pages/products/NewProduct";
+import ProductDetail from "../pages/products/ProductDetail";
 
 class App extends React.Component {
 
@@ -27,6 +28,7 @@ class App extends React.Component {
                 <Route path = "*" element = {<Navigate to="/login"/>}/>
                 <Route path = "/admin/panel" element = {<AdminPanel/>}/>
                 <Route path = "/pages/products/new_product" element = {<NewProduct/>}/>
+                <Route path = "/pages/products/:id" element = {<ProductDetail/>}/>
               </Routes>
             </BrowserRouter>
           </main>
