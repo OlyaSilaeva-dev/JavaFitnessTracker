@@ -1,49 +1,48 @@
 package com.example.JavaFitnessTracker.controllers;
 
+import com.example.JavaFitnessTracker.dto.product.ProductRequest;
 import com.example.JavaFitnessTracker.entity.Product;
 import com.example.JavaFitnessTracker.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
+@RequestMapping("api/v1/pages/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("/product")
-    public String products(@RequestParam(name = "name", required = false) String name, Model model) {
-        model.addAttribute("products", productService.list(name));
-        return "products";
+    @GetMapping("/all")
+    public ResponseEntity<List<Product>> products(@RequestParam(name = "name", required = false) String name) {
+        return ResponseEntity.ok(productService.list(name));
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/{id}")
     public String productInfo(@PathVariable Long id, Model model) {
         model.addAttribute("product", productService.getProductById(id));
         model.addAttribute("image", productService.getProductById(id).getImage());
         return "product-info";
     }
 
-    @PostMapping("/product/{id}/upload")
-    public String productUpload(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
-        productService.save(productService.getProductById(id), file);
-        return "redirect:/product";
+//    @PostMapping("/{id}/upload")
+//    public String productUpload(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+//        productService.save(productService.getProductById(id), file);
+//        return "redirect:/product";
+//    }
+
+    @PostMapping("/create")
+    public void createProduct(@RequestPart ProductRequest request, @RequestParam MultipartFile image) throws IOException {
+        productService.save(request, image);
     }
 
-    @PostMapping("/product/create")
-    public String createProduct(@RequestParam("file") MultipartFile file, Product product) throws IOException {
-        productService.save(product, file);
-        return "redirect:/product";
-    }
-
-    @PostMapping("/product/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return "redirect:/product";

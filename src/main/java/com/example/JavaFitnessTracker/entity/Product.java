@@ -2,12 +2,14 @@ package com.example.JavaFitnessTracker.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "product")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
@@ -31,7 +33,7 @@ public class Product {
     @Column(name = "carbohydrates")
     private Double carbohydrates;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn
     private Image image;
 }

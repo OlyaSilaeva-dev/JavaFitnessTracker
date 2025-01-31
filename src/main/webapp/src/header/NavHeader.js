@@ -27,9 +27,9 @@ class NavHeader extends React.Component {
                         <Navbar.Toggle aria-controls="navbar-nav"/>
                         <Navbar.Collapse className="justify-content-end" id = "navbar-nav">
                             <Nav id="nav-list" >
-                                <NavLink className="me-lg-3" href="/products">Добавить продукт</NavLink>
-                                <NavLink className="me-lg-3" href="/workouts">Добавить тренировку</NavLink>
-                                <NavLink className="me-lg-3" href="/history">История</NavLink>
+                                <NavLink className="me-lg-3" href="/pages/products">Добавить продукт</NavLink>
+                                <NavLink className="me-lg-3" href="/pages/workouts">Добавить тренировку</NavLink>
+                                <NavLink className="me-lg-3" href="/pages/history">История</NavLink>
                                 <NavDropdown  title="Профиль" className="d-flex flex-column me-lg-3 text-center center-text" id ="nav-dropdown">
                                     <NavDropdown.Item href="/">Профиль</NavDropdown.Item>
                                     <NavDropdown.Item href="/">Изменить</NavDropdown.Item>

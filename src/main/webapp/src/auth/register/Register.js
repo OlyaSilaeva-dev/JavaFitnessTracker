@@ -54,7 +54,6 @@ class Register extends React.Component {
             }); // Добавляем аватар
         }
 
-
         try {
             const response = await apiClient.post('/api/v1/auth/register', formData,
                 {
@@ -70,7 +69,6 @@ class Register extends React.Component {
             console.log(err);
             this.setState({greeting: `Ошибка: ${err.message}`});
         }
-
     };
 
 

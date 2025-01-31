@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import PrivateRoute from "../router/PrivateRoute";
 import AdminPanel from "../admin/AdminPanel";
 import Register from "../auth/register/Register";
+import Product from "../pages/products/Product";
+import NewProduct from "../pages/products/NewProduct";
 
 class App extends React.Component {
 
@@ -20,9 +22,11 @@ class App extends React.Component {
               <Routes>
                 <Route path = "/register" element = {<Register/>}/>
                 <Route path = "/login" element = {<Login/>}/>
+                <Route path = "/pages/products" element = {<Product/>}/>
                 <Route path = "/hello-page" element = {<PrivateRoute><HelloPage user = {this.getUser() ? this.getUser() : "unknown"} /></PrivateRoute>}/>
                 <Route path = "*" element = {<Navigate to="/login"/>}/>
                 <Route path = "/admin/panel" element = {<AdminPanel/>}/>
+                <Route path = "/pages/products/new_product" element = {<NewProduct/>}/>
               </Routes>
             </BrowserRouter>
           </main>
