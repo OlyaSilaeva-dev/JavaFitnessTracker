@@ -47,11 +47,7 @@ class Register extends React.Component {
 
         formData.append('request', new Blob([JSON.stringify(requestBody)], { type: 'application/json' }));
         if (this.state.avatar) {
-            formData.append('avatar', this.state.avatar, {
-                headers: {
-                    'Content-Type': 'multipart/form-data', // Важно!
-                },
-            }); // Добавляем аватар
+            formData.append('avatar', this.state.avatar, this.state.avatar.name); // Добавляем аватар
         }
 
         try {

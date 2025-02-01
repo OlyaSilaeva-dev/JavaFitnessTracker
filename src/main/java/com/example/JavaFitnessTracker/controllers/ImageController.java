@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -25,6 +26,7 @@ public class ImageController {
         if (image == null) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok()
                 .header("fileName", image.getOriginalFilename())
                 .contentType(MediaType.valueOf(image.getContentType()))

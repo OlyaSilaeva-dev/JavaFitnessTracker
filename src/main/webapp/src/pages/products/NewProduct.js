@@ -30,8 +30,8 @@ class NewProduct extends React.Component {
         const formData = new FormData();
         const requestBody = {
             name: this.state.name,
-            calories: this.state.calories,
-            proteins: this.state.proteins,
+            calories: parseFloat(this.state.calories),
+            proteins: parseFloat(this.state.proteins),
             fats: parseFloat(this.state.fats),
             carbohydrates: parseFloat(this.state.carbohydrates)
         };
@@ -39,21 +39,11 @@ class NewProduct extends React.Component {
 
         formData.append('request', new Blob([JSON.stringify(requestBody)], {type: 'application/json'}));
         if (this.state.image) {
-            formData.append('image', this.state.image, {
-                headers: {
-                    'Content-Type': 'multipart/form-data', // Важно!
-                },
-            });
+            formData.append('image', this.state.image, this.state.image.name);
         }
 
         try {
-            await apiClient.post('/api/v1/pages/products/create', formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data', // Важно!
-                    },
-                }
-            );
+            await apiClient.post('/api/v1/pages/products/create', formData);
             window.location.href = "/pages/products";
         } catch (err) {
             console.log(err);

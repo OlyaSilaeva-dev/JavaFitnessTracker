@@ -57,7 +57,9 @@ const Product = () => {
             <h1 className="text-center mb-4">Продукты</h1>
 
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Выбрать продукт:</h2>
+                <Button variant="success" href="/hello-page" className="d-flex align-items-center me-3">
+                    <span className="me-2"> Перейти на главную</span>
+                </Button>
                 <Button variant="success" href="/pages/products/new_product" className="d-flex align-items-center">
                     <span className="me-2">+ Создать продукт</span>
                 </Button>
@@ -81,8 +83,8 @@ const Product = () => {
                 <div >
                     {filteredProducts.map((product) => (
                         <div key={product.id} className="d-flex align-items-center">
-                            <div className="row row-cols-6">
-                                <h4 className="col mb-0">
+                            <div className="row row-cols-4 mb-1">
+                                <h4 className="col">
                                     {product.name}
                                 </h4>
                                 <Button variant="outline-success" className="col" href={`/pages/products/${product.id}`}>

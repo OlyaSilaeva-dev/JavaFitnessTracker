@@ -37,13 +37,14 @@ public class ProductController {
 //    }
 
     @PostMapping("/create")
-    public void createProduct(@RequestPart ProductRequest request, @RequestParam MultipartFile image) throws IOException {
+    public ResponseEntity<String> createProduct(@RequestPart ProductRequest request, @RequestParam MultipartFile image) throws IOException {
         productService.save(request, image);
+        return ResponseEntity.ok("Product created");
     }
 
-    @PostMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return "redirect:/product";
+        return ResponseEntity.ok("Product deleted");
     }
 }
