@@ -8,6 +8,7 @@ import Register from "../auth/register/Register";
 import Product from "../pages/products/Product";
 import NewProduct from "../pages/products/NewProduct";
 import ProductDetail from "../pages/products/ProductDetail";
+import AddToDayProgress from "../pages/products/AddToDayProgress"
 
 class App extends React.Component {
 
@@ -29,6 +30,7 @@ class App extends React.Component {
                 <Route path = "/admin/panel" element = {<AdminPanel/>}/>
                 <Route path = "/pages/products/new_product" element = {<NewProduct/>}/>
                 <Route path = "/pages/products/:id" element = {<ProductDetail/>}/>
+                <Route path = "/pages/products/add_to_dayprogress/:id" element = {<AddToDayProgress/>}/>
               </Routes>
             </BrowserRouter>
           </main>

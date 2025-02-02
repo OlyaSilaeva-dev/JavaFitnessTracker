@@ -32,7 +32,7 @@ public class ProductController {
 
 //    @PostMapping("/{id}/upload")
 //    public String productUpload(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
-//        productService.save(productService.getProductById(id), file);
+//        productService.saveUser(productService.getProductById(id), file);
 //        return "redirect:/product";
 //    }
 

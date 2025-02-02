@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS dayprogress_product
     "dayprogress_id"   BIGINT,
     "product_id"       BIGINT,
     "grams_of_product" DOUBLE PRECISION,
-    "meal"             VARCHAR(255) CHECK ("meal" IN ('BREAKFAST', 'LUNCH', 'DINNER')),
+    "meal"             VARCHAR(255) CHECK ("meal" IN ('BREAKFAST', 'LUNCH', 'DINNER', 'SNACK')),
     FOREIGN KEY ("dayprogress_id") REFERENCES dayprogress ("id"),
     FOREIGN KEY ("product_id") REFERENCES product ("id")
 );

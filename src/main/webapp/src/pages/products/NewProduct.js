@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {Button, Form, FormGroup} from "react-bootstrap";
+import React from "react";
+import {Alert, Button, Container, Form, FormGroup, Spinner} from "react-bootstrap";
 import apiClient from "../../axios_api/apiClient";
 
 class NewProduct extends React.Component {
@@ -36,7 +36,6 @@ class NewProduct extends React.Component {
             carbohydrates: parseFloat(this.state.carbohydrates)
         };
 
-
         formData.append('request', new Blob([JSON.stringify(requestBody)], {type: 'application/json'}));
         if (this.state.image) {
             formData.append('image', this.state.image, this.state.image.name);
@@ -52,9 +51,9 @@ class NewProduct extends React.Component {
     }
 
     render() {
-        return <div>
-            <h1 className="mx-auto d-flex flex-row justify-content-center mt-5">Новый продукт</h1>
-            <Form className="new-product-form" as="form" encType="multipart/form-data">
+        return <Container className="container mt-4">
+            <h1 className="mx-auto d-flex flex-row justify-content-center mt-4">Новый продукт</h1>
+            <Form className="new-product-form" encType="multipart/form-data">
                 <FormGroup>
                     <Form.Label htmlFor="name">Название продукта: </Form.Label>
                     <Form.Control type="text" id="name" placeholder="название продукта"
@@ -89,9 +88,13 @@ class NewProduct extends React.Component {
                     </Form.Control>
                 </FormGroup>
 
-                <Button className="m-4" variant="outline-success" onClick={this.handleClick}>Создать продукт</Button>
+                <div className="d-flex justify-content-center mt-4">
+                    <Button className="w-50" variant="outline-success" onClick={this.handleClick}>
+                        Создать продукт
+                    </Button>
+                </div>
             </Form>
-        </div>
+        </Container>
     }
 }
 
