@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, FormGroup, Form } from "react-bootstrap";
+import {Button, FormGroup, Form, Container} from "react-bootstrap";
 import apiClient from "../../axios_api/apiClient";
 import { Link, Navigate } from "react-router";
 import isTokenExpired from "../isTokenExpired";
@@ -41,9 +41,9 @@ class Login extends React.Component {
     render () {
         if (!isTokenExpired()) return <Navigate to="/hello-page"/>;
         return (
-            <div>
+            <Container>
                 <h1 className="mx-auto d-flex flex-row justify-content-center mt-5">Вход в личный кабинет</h1>
-                <Form className = "login-form" >
+                <Form className = "login-form">
                     <FormGroup>
                         <Form.Label htmlFor="email">Email: </Form.Label>
                         <Form.Control type="email" id="email" placeholder="Ivanov@mail.rur" onChange={(event) => this.setState({email: event.target.value})}></Form.Control>
@@ -52,14 +52,16 @@ class Login extends React.Component {
                         <Form.Label htmlFor="password">Password: </Form.Label>
                         <Form.Control type="password" id="password" placeholder="От 8 цифр" onChange={(event) => this.setState({password: event.target.value})}></Form.Control>
                     </FormGroup>
-                    <Button className="m-4" variant ="outline-primary" onClick={this.handleClick}>Войти</Button>
-                    <Link to="/register">
-                        <Button variant ="outline-secondary">Регистрация</Button>
-                    </Link>
-                </Form>
+                    <FormGroup className="d-flex justify-content-center align-items-center flex-column">
+                        <Button className="mb-2 mt-2 text-center" variant ="outline-primary" onClick={this.handleClick}>Войти</Button>
+                        <Link to="/register">
+                            <Button variant ="outline-secondary">Регистрация</Button>
+                        </Link>
+                    </FormGroup>
+            </Form>
 
                 <div className="text-center">{this.state.greeting}</div>
-            </div>
+            </Container>
         )
     }
 }
