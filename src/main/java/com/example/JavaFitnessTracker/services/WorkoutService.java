@@ -1,6 +1,7 @@
 package com.example.JavaFitnessTracker.services;
 
 import com.example.JavaFitnessTracker.dto.workout.WorkoutExerciseRequest;
+import com.example.JavaFitnessTracker.dto.workout.WorkoutRequest;
 import com.example.JavaFitnessTracker.entity.Workout;
 import com.example.JavaFitnessTracker.entity.WorkoutExercise;
 import com.example.JavaFitnessTracker.exceptions.UnknownExerciseException;
@@ -31,9 +32,9 @@ public class WorkoutService {
         return workoutRepository.findById(id).orElse(null);
     }
 
-    public Workout createEmptyWorkout(String workoutName) {
+    public Workout createEmptyWorkout(WorkoutRequest workoutRequest) {
         Workout workout = Workout.builder()
-                .name(workoutName)
+                .name(workoutRequest.getWorkoutName())
                 .build();
         return workoutRepository.save(workout);
     }

@@ -1,6 +1,7 @@
 package com.example.JavaFitnessTracker.controllers;
 
 import com.example.JavaFitnessTracker.dto.workout.WorkoutExerciseRequest;
+import com.example.JavaFitnessTracker.dto.workout.WorkoutRequest;
 import com.example.JavaFitnessTracker.entity.Workout;
 import com.example.JavaFitnessTracker.services.WorkoutService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/v1/pages/workouts")
 @RequiredArgsConstructor
 public class WorkoutController {
-    WorkoutService workoutService;
+    private final WorkoutService workoutService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Workout>> getAllWorkouts() {
@@ -22,8 +23,8 @@ public class WorkoutController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Workout> createWorkout(@RequestBody String name) {
-        return ResponseEntity.ok(workoutService.createEmptyWorkout(name));
+    public ResponseEntity<Workout> createWorkout(@RequestBody WorkoutRequest workoutRequest) {
+        return ResponseEntity.ok(workoutService.createEmptyWorkout(workoutRequest));
     }
 
     @PostMapping("/add_exercise")

@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Container, Form, FormControl, FormGroup} from "react-bootstrap";
+import {Button, ButtonGroup, Container, Form, FormControl, FormGroup} from "react-bootstrap";
 import apiClient from "../../axios_api/apiClient";
 
 class NewWorkout extends React.Component {
@@ -7,16 +7,19 @@ class NewWorkout extends React.Component {
         super(props);
         this.state = {
             workoutId: null,
-            name: ""
+            workoutName: ""
         };
         this.handleCreateWorkout = this.handleCreateWorkout.bind(this);
     }
 
     async handleCreateWorkout(e) {
         e.preventDefault();
+        const request = {
+            workoutName: this.state.workoutName
+        }
 
         try {
-            const response = await apiClient.post("/api/v1/pages/workouts/create", { name: this.state.name });
+            const response = await apiClient.post("/api/v1/pages/workouts/create", request);
             this.setState({workoutId: response.data.id});
             console.log("Workout created with ID:", response.data.id);
         } catch (err) {
@@ -25,19 +28,20 @@ class NewWorkout extends React.Component {
     }
 
     render() {
+        console.log(this.props.workoutId)
         return <Container>
             <h1 className="text-center mb-4">Новая тренировка</h1>
 
             <Form onSubmit={this.handleCreateWorkout}>
                 <FormGroup>
-                    <input
+                    <Form.Control
                         type="text"
-                        className="form-control"
-                        placeholder="Название тренировки"
-                        value={this.state.name}
-                        onChange={(e) => this.setState({name: e.target.value})}/>
+                        id="name"
+                        placeholder="Введите название тренировки"
+                        value={this.state.workoutName}
+                        onChange={(event) => this.setState({workoutName: event.target.value})}
+                    />
                 </FormGroup>
-
                 <div className="d-flex justify-content-center">
                     <Button className="m-4" variant="outline-primary" type="submit">
                         Создать тренировку
@@ -46,14 +50,15 @@ class NewWorkout extends React.Component {
             </Form>
 
             {this.state.workoutId && (
-                <Button>
-                    Добавить упражнение
-                </Button>
+                <div className="d-flex justify-content-center">
+                    <Button variant="outline-primary">
+                        Добавить упражнение
+                    </Button>
+                </div>
             )}
 
-        </Container>
+            </Container>
     }
-
 }
 
-export default NewWorkout;
+            export default NewWorkout;
