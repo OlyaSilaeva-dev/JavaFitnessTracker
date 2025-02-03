@@ -2,6 +2,7 @@ package com.example.JavaFitnessTracker.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "workout")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Workout {
@@ -22,5 +24,5 @@ public class Workout {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = { CascadeType.ALL }, mappedBy = "workout")
-    private Set<WorkoutExercise> workoutExerciseList;
+    private Set<WorkoutExercise> workoutExerciseSet;
 }

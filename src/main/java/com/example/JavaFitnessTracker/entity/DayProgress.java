@@ -31,6 +31,9 @@ public class DayProgress {
     @OneToMany(mappedBy = "dayProgress", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<DayProgressProduct> dayProgressProducts;
 
+    @OneToMany(mappedBy = "dayProgress", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<DayProgressWorkout> dayProgressWorkouts;
+
     @PrePersist
     protected void onCreate() {
         recordingDate = LocalDate.now();

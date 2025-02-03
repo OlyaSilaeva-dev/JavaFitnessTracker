@@ -1,5 +1,5 @@
 import React from "react";
-import {Alert, Button, Container, Form, FormGroup, Spinner} from "react-bootstrap";
+import {Button, Container, Form, FormGroup} from "react-bootstrap";
 import apiClient from "../../axios_api/apiClient";
 
 class NewProduct extends React.Component {
