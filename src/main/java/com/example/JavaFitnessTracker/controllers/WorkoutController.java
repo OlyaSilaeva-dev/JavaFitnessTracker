@@ -3,6 +3,8 @@ package com.example.JavaFitnessTracker.controllers;
 import com.example.JavaFitnessTracker.dto.workout.WorkoutExerciseRequest;
 import com.example.JavaFitnessTracker.dto.workout.WorkoutRequest;
 import com.example.JavaFitnessTracker.entity.Workout;
+import com.example.JavaFitnessTracker.entity.Exercise;
+import com.example.JavaFitnessTracker.entity.WorkoutExercise;
 import com.example.JavaFitnessTracker.services.WorkoutService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +32,15 @@ public class WorkoutController {
     @PostMapping("/add_exercise")
     public ResponseEntity<Workout> addExercise(@RequestBody WorkoutExerciseRequest request) {
         return ResponseEntity.ok(workoutService.AddExerciseToWorkout(request));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Workout> getWorkoutById(@PathVariable Long id) {
+        return ResponseEntity.ok(workoutService.getWorkoutById(id));
+    }
+
+    @GetMapping("/find_exercises/{id}")
+    public ResponseEntity<List<WorkoutExercise>> getWorkoutExercises(@PathVariable Long id) {
+        return ResponseEntity.ok(workoutService.getWorkoutExercisesByWorkoutId(id));
     }
 }

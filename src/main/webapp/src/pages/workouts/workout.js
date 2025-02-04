@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Button, ButtonGroup, Container, Form, FormGroup} from "react-bootstrap";
+import {Alert, Button, ButtonGroup, Container, Form, FormGroup, Spinner} from "react-bootstrap";
 import apiClient from "../../axios_api/apiClient";
 
 const Workout = () => {
@@ -8,7 +8,6 @@ const Workout = () => {
     const [searchQuery, setSearchQuery] = useState(""); // Поле поиска
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
 
     useEffect(() => {
         const fetchGet = async () => {
@@ -35,7 +34,6 @@ const Workout = () => {
         );
         setFilteredWorkouts(filtered)
     }, [searchQuery, workouts]);
-
 
     return <Container className={""}>
         <h1 className="text-center mb-4">Тренировки</h1>

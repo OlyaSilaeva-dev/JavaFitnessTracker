@@ -2,6 +2,7 @@ package com.example.JavaFitnessTracker.services;
 
 import com.example.JavaFitnessTracker.dto.workout.WorkoutExerciseRequest;
 import com.example.JavaFitnessTracker.dto.workout.WorkoutRequest;
+import com.example.JavaFitnessTracker.entity.Exercise;
 import com.example.JavaFitnessTracker.entity.Workout;
 import com.example.JavaFitnessTracker.entity.WorkoutExercise;
 import com.example.JavaFitnessTracker.exceptions.UnknownExerciseException;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,5 +51,9 @@ public class WorkoutService {
 
         workoutExerciseRepository.save(workoutExercise);
         return workout;
+    }
+
+    public List<WorkoutExercise> getWorkoutExercisesByWorkoutId(Long workoutId) {
+        return workoutExerciseRepository.findByWorkoutId(workoutId);
     }
 }

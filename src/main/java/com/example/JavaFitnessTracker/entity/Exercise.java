@@ -3,6 +3,7 @@ package com.example.JavaFitnessTracker.entity;
 import com.example.JavaFitnessTracker.entity.enums.Intensity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "exercise")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Exercise {
@@ -28,7 +30,7 @@ public class Exercise {
     @Column(name = "calories")
     private Double calories;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn
     private Image image;
 

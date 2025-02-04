@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from "react";
 import apiClient from "../../../axios_api/apiClient";
 import {Alert, Button, Container, Form, FormGroup,Spinner} from "react-bootstrap";
+import {useParams} from "react-router-dom";
 
 const Exercise = () => {
+    const {id} = useParams();
     const [exercises, setExercises] = useState([]);
     const [filteredExercises, setFilteredExercises] = useState([]); // Отфильтрованные продукты
     const [searchQuery, setSearchQuery] = useState(""); // Поле поиска
@@ -18,7 +20,7 @@ const Exercise = () => {
                 setFilteredExercises(exercisesData)
                 console.log("Fetched data:", response.data);
             } catch (err) {
-                console.error("Error fetching products:", err);
+                console.error("Error fetching exercises:", err);
                 setError(err?.message || "Failed to fetch exercises.");
             } finally {
                 setLoading(false);
@@ -39,7 +41,7 @@ const Exercise = () => {
         return (
             <Container className="text-center mt-5">
                 <Spinner animation="border" variant="primary"/>
-                <p>Loading products...</p>
+                <p>Loading exercises...</p>
             </Container>
         );
     }
@@ -60,7 +62,7 @@ const Exercise = () => {
                 <Button variant="primary" href="/hello-page" className="d-flex align-items-center me-3">
                     <span className="me-2"> Перейти на главную</span>
                 </Button>
-                <Button variant="primary" href="/pages/workouts/exercises/new_exercise" className="d-flex align-items-center">
+                <Button variant="primary" href={`/pages/workouts/${id}/exercises/new_exercise`} className="d-flex align-items-center">
                     <span className="me-2">+ Создать упражнение</span>
                 </Button>
             </div>

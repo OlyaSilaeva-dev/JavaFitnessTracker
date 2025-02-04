@@ -22,6 +22,7 @@ class NewWorkout extends React.Component {
             const response = await apiClient.post("/api/v1/pages/workouts/create", request);
             this.setState({workoutId: response.data.id});
             console.log("Workout created with ID:", response.data.id);
+            window.location.href = `/pages/workouts/${response.data.id}`;
         } catch (err) {
             console.log("Ошибка при создании тренировки:", err);
         }
@@ -49,16 +50,8 @@ class NewWorkout extends React.Component {
                 </div>
             </Form>
 
-            {this.state.workoutId && (
-                <div className="d-flex justify-content-center">
-                    <Button variant="outline-primary">
-                        Добавить упражнение
-                    </Button>
-                </div>
-            )}
-
             </Container>
     }
 }
 
-            export default NewWorkout;
+export default NewWorkout;

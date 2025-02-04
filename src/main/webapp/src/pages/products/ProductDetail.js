@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import apiClient from "../../axios_api/apiClient";
 import {Container, Image, Spinner, Alert, Card, ListGroup, Button, ButtonGroup} from "react-bootstrap";
