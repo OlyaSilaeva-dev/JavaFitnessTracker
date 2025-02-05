@@ -59,8 +59,8 @@ const Exercise = () => {
             <h1 className="text-center mb-4">Упражнения</h1>
 
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <Button variant="primary" href="/hello-page" className="d-flex align-items-center me-3">
-                    <span className="me-2"> Перейти на главную</span>
+                <Button variant="primary" href={`/pages/workouts/${id}/`} className="d-flex align-items-center me-3">
+                    <span className="me-2">Перейти к тренировке</span>
                 </Button>
                 <Button variant="primary" href={`/pages/workouts/${id}/exercises/new_exercise`} className="d-flex align-items-center">
                     <span className="me-2">+ Создать упражнение</span>
@@ -89,7 +89,7 @@ const Exercise = () => {
                                 <h4 className="col">
                                     {exercise.name}
                                 </h4>
-                                <Button variant="outline-primary" className="col" href={`/pages/workouts/exercises/${exercise.id}`}>
+                                <Button variant="outline-primary" className="col" href={`/pages/workouts/${id}/exercises/${exercise.id}`}>
                                     Подробнее...
                                 </Button>
                             </div>

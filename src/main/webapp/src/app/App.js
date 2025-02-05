@@ -14,6 +14,8 @@ import NewWorkout from "../pages/workouts/NewWorkout";
 import WorkoutInfo from "../pages/workouts/WorkoutInfo";
 import Exercise from "../pages/workouts/exercises/Exercise";
 import NewExercise from "../pages/workouts/exercises/NewExercise";
+import ExerciseDetail from "../pages/workouts/exercises/ExerciseDetail";
+import AddExerciseToWorkout from "../pages/workouts/exercises/AddExerciseToWorkout";
 
 class App extends React.Component {
 
@@ -41,6 +43,8 @@ class App extends React.Component {
                 <Route path = "/pages/workouts/:id" element={<WorkoutInfo/>}/>
                 <Route path = "/pages/workouts/:id/exercises" element={<Exercise/>}/>
                 <Route path = "/pages/workouts/:id/exercises/new_exercise" element={<NewExercise/>}/>
+                <Route path = "/pages/workouts/:workoutId/exercises/:exerciseId" element={<ExerciseDetail/>}/>
+                <Route path = "/pages/workouts/:workoutId/exercises/add_to_dayprogress/:exerciseId" element={<AddExerciseToWorkout/>}/>
               </Routes>
             </BrowserRouter>
           </main>
