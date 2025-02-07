@@ -1,5 +1,6 @@
 package com.example.JavaFitnessTracker.entity;
 
+import com.example.JavaFitnessTracker.entity.enums.Activity;
 import com.example.JavaFitnessTracker.entity.enums.Gender;
 import com.example.JavaFitnessTracker.entity.enums.Purpose;
 import com.example.JavaFitnessTracker.entity.enums.Role;
@@ -37,6 +38,9 @@ public class User implements UserDetails {
     @Column(name="name")
     private String name;
 
+    @Column(name="birthYear")
+    private Integer birthYear;
+
     @Column(name="weight")
     private Double weight;
 
@@ -46,6 +50,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name="gender")
     private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="activity")
+    private Activity activity;
 
     @Enumerated(EnumType.STRING)
     @Column(name="purpose")

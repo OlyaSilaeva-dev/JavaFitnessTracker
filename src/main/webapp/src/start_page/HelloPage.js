@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import apiClient from "../axios_api/apiClient";
 import NavHeader from "../header/NavHeader";
-import { Spinner, Container } from "react-bootstrap";
+import {
+    Spinner,
+    Container,
+    Image,
+    ButtonGroup,
+    Button,
+    ListGroup,
+    ListGroupItem,
+    Form,
+    FormGroup, FormLabel, FormControl
+} from "react-bootstrap";
 // import Slider from "../other/Slider";
 
 const HelloPage = () => {
-    
     const [user, setUser] = useState(null);
+    const [avatarURL, setAvatarURL] = useState(null);
 
     useEffect(() => {
         const fetchGet = async () => {
@@ -22,12 +32,70 @@ const HelloPage = () => {
         fetchGet()
     }, []);
 
+    useEffect(() => {
+        if (!user || !user.avatar) return;
+
+        const fetchImage = async () => {
+            try {
+                const response = await apiClient.get(`/api/v1/images/${user.avatar.id}`, {
+                    responseType: "blob",
+                });
+                const imageUrl = URL.createObjectURL(response.data);
+                setAvatarURL(imageUrl);
+            } catch (err) {
+                // setError("Ошибка при загрузке изображения");
+            }
+        };
+
+        fetchImage();
+
+        return () => {
+            if (avatarURL) URL.revokeObjectURL(avatarURL);
+        };
+    }, [user]);
+
+    const currentDate = new Date().toLocaleDateString();
+
     return (
         <>
             <NavHeader user = {localStorage.getItem("user")}/>
-            <Container className="d-flex justify-content-center my-5">
-            <h1>Добро пожаловать, {user? user.name: <Spinner animation="border" role="status"/>}!</h1>
+            <Container className="d-flex justify-content-center row cols m-3">
+                <h2 className={"mb-2"}>Добро пожаловать, {user? user.name: <Spinner animation="border" role="status"/>}!</h2>
+                {avatarURL && (
+                    <Image
+                        src={avatarURL}
+                        alt={user.name}
+                        fluid
+                        className="rounded-circle mb-3"
+                        style={{ maxWidth: "400px", height: "auto", objectFit: "contain" }}
+                    />
+                )}
+
+                <ButtonGroup className={"w-full mb-5"}>
+                    <Button className={"border-black btn-warning btn-outline-light w-25"}>
+                        <div className={"text-dark"}>Предыдущий</div>
+                    </Button>
+                    <Button className={"border-black btn-warning btn-outline-light w-50"}>
+                        <div className={"text-dark"}>{currentDate}</div>
+                    </Button>
+                    <Button className={"border-black btn-warning btn-outline-light w-25"}>
+                        <div className={"text-dark"}>Следующий</div>
+                    </Button>
+                </ButtonGroup>
+
+                <div className={"d-flex justify-content-between w-full"}>
+                    <Form className={" border border-black rounded-circle m-2 w-25"}>
+                        <h6 className={"d-flex justify-content-center m-2"}>Потребление: ...</h6>
+                    </Form>
+                    <Form className={" border border-black rounded-circle me-3 ms-3 w-50"}>
+                        <h4 className={"d-flex text-center m-2"}><strong>Ккал. осталось: ...</strong></h4>
+                    </Form>
+                    <Form className={"border border-black rounded-circle m-2 w-25"}>
+                        <h6 className={"d-flex justify-content-center m-2"}>Расход: ...</h6>
+                    </Form>
+                </div>
             </Container>
+
         </>
     )
 }

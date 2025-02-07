@@ -1,18 +1,24 @@
 package com.example.JavaFitnessTracker.services;
 
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressProductRequest;
+import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressRequest;
+import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressResponse;
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressWorkoutRequest;
 import com.example.JavaFitnessTracker.entity.*;
+import com.example.JavaFitnessTracker.entity.enums.Gender;
+import com.example.JavaFitnessTracker.exceptions.UnknownDayProgressException;
 import com.example.JavaFitnessTracker.exceptions.UnknownProductException;
 import com.example.JavaFitnessTracker.exceptions.UnknownUserException;
 import com.example.JavaFitnessTracker.exceptions.UnknownWorkoutException;
 import com.example.JavaFitnessTracker.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.type.descriptor.sql.internal.Scale6IntervalSecondDdlType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Year;
 
 @Service
 @Slf4j
@@ -60,5 +66,33 @@ public class DayProgressService {
                 .build();
 
         dayProgressWorkoutRepository.save(dayProgressWorkout);
+    }
+
+    public DayProgressResponse getDayProgressInfo(DayProgressRequest request) {
+        DayProgress dayProgress = dayProgressRepository.findByUserIdAndRecordingDate(request.getUserId(), request.getDay())
+                .orElseThrow(UnknownDayProgressException::new);
+
+        DayProgressResponse dayProgressResponse = DayProgressResponse.builder()
+                .dayNormCalories(calculateDayNormCalories(request.getUserId()))
+                .build();
+
+        return dayProgressResponse;
+    }
+
+    private Double calculateDayNormCalories(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(UnknownUserException::new);
+
+        double coefActivity = (
+                switch (user.getActivity()) {
+                    case LOWEST -> 1.2;
+                    case LOW -> 1.38;
+                    case MEDIUM -> 1.55;
+                    case HIGHEST -> 1.73;
+                    case HIGH -> 1.9;
+                });
+
+        double delta = (user.getGender() == Gender.MALE ? 5.0 : -161.0);
+        double age = Year.now().getValue() - user.getBirthYear();
+        return (user.getWeight() + user.getHeight() - age * 5 + delta) * coefActivity;
     }
 }

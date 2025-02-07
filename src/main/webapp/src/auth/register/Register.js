@@ -13,9 +13,11 @@ class Register extends React.Component {
             email: "",
             password: "",
             name: "",
+            birthYear: "",
             weight: "",
             height: "",
             gender: "MALE",
+            activity: "MEDIUM",
             purpose: "LOSE",
             avatar: null,
             greeting: ""
@@ -40,8 +42,10 @@ class Register extends React.Component {
             name: this.state.name,
             weight: parseFloat(this.state.weight),
             height: parseFloat(this.state.height),
+            birthYear: parseInt(this.state.birthYear),
             gender: this.state.gender,
-            purpose: this.state.purpose,
+            activity: this.state.activity,
+            purpose: this.state.purpose
         };
 
 
@@ -90,6 +94,11 @@ class Register extends React.Component {
                                       onChange={(event) => this.setState({name: event.target.value})}></Form.Control>
                     </FormGroup>
                     <FormGroup>
+                        <Form.Label htmlFor="birthYear">Год рождения</Form.Label>
+                        <Form.Control type="number" id="birthYear" placeholder="2000"
+                                        onChange={(event) => this.setState({birthYear: event.target.value})}></Form.Control>
+                    </FormGroup>
+                    <FormGroup>
                         <Form.Label htmlFor="weight"> Вес: </Form.Label>
                         <Form.Control type="number" step="0.01" id="weight" placeholder="вес в кг"
                                       onChange={(event) => this.setState({weight: event.target.value})}></Form.Control>
@@ -109,8 +118,22 @@ class Register extends React.Component {
                             <option value="FEMALE">female</option>
                         </Form.Control>
                     </FormGroup>
+                    {/*LOWEST, LOW, MEDIUM, HIGH, HIGHEST;*/}
                     <FormGroup>
-                        <Form.Label htmlFor="purpose">Purpose: </Form.Label>
+                        <Form.Label htmlFor="activity">Gender: </Form.Label>
+                        <Form.Control
+                            as="select"
+                            id="activity"
+                            onChange={(event) => this.setState({activity: event.target.value})}>
+                            <option value="LOWEST">тренировки меньше 1 раза в неделю</option>
+                            <option value="LOW">тренировки 1-3 раза в неделю</option>
+                            <option value="MEDIUM">тренировки 3-5 раз в неделю</option>
+                            <option value="HIGH">тренировки 6-7 раз в неделю</option>
+                            <option value="HIGHEST">интенсивные тренировки каждый день</option>
+                        </Form.Control>
+                    </FormGroup>
+                    <FormGroup>
+                    <Form.Label htmlFor="purpose">Purpose: </Form.Label>
                         <Form.Control
                             as="select"
                             id="purpose"
