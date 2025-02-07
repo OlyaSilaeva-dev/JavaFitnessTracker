@@ -38,6 +38,35 @@ const WorkoutInfo = () => {
         fetchGet();
     }, []);
 
+    const handleDelete = async () => {
+        if (!window.confirm("Вы уверены, что хотите удалить эту тренировку?")) {
+            return;
+        }
+
+        try {
+            await apiClient.delete(`api/v1/pages/workouts/delete/${workout.id}`);
+            alert("Тренировка успешно удалена!");
+            window.location.href = "/pages/workouts"
+        } catch (err) {
+            console.error("Ошибка при удалении тренировки:", err);
+            alert("Ошибка при удалении тренировки!");
+        }
+    }
+
+    const handleSave = async () => {
+        const requestBody = {
+            userId: localStorage.getItem("userId"),
+            workoutId: id
+        }
+
+        try {
+            await apiClient.post(`api/v1/day_progress/add_workout`, requestBody);
+        } catch (err) {
+            console.error("Ошибка при сохранении тренировки:", err);
+            alert("Ошибка при сохранении тренировки!");
+        }
+    }
+
     if (loading) return <Spinner animation="border" />;
     if (error) return <Alert variant="danger">{error}</Alert>;
     if (!workout) return <Alert variant="warning">Тренировка не найдена</Alert>;
@@ -73,13 +102,20 @@ const WorkoutInfo = () => {
         </Card>
 
         <div className={"d-flex justify-content-center mt-2"}>
-            <Button className="me-2" variant={"info"} href={"/pages/workouts"}>
+            <Button className="me-2" variant={"outline-primary"} href={"/pages/workouts"}>
                 Вернуться к тренировкам
             </Button>
-            <Button variant={"info"} href={`/pages/workouts/${id}/exercises`}>
+            <Button className="me-2" variant={"outline-primary"} href={`/pages/workouts/${id}/exercises`}>
                 Добавить упражнение
             </Button>
+            <Button className="me-2" variant={"outline-primary"} onClick={handleSave}>
+                Сохранить тренировку
+            </Button>
+            <Button variant={"outline-danger"} onClick={handleDelete}>
+                Удалить тренировку
+            </Button>
         </div>
+
     </Container>
 }
 

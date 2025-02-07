@@ -1,6 +1,7 @@
 package com.example.JavaFitnessTracker.controllers;
 
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressProductRequest;
+import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressWorkoutRequest;
 import com.example.JavaFitnessTracker.services.DayProgressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,4 +20,9 @@ public class DayProgressController {
         return ResponseEntity.ok("Success");
     }
 
+    @PostMapping("/add_workout")
+    public ResponseEntity<String> createDayProgressWorkout(@RequestBody DayProgressWorkoutRequest dayProgressWorkoutRequest) {
+        dayProgressService.addWorkoutToDayProgress(dayProgressWorkoutRequest);
+        return ResponseEntity.ok("Success");
+    }
 }

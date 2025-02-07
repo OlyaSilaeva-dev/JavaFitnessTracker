@@ -1,15 +1,12 @@
 package com.example.JavaFitnessTracker.services;
 
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressProductRequest;
-import com.example.JavaFitnessTracker.entity.DayProgress;
-import com.example.JavaFitnessTracker.entity.DayProgressProduct;
-import com.example.JavaFitnessTracker.entity.Product;
+import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressWorkoutRequest;
+import com.example.JavaFitnessTracker.entity.*;
 import com.example.JavaFitnessTracker.exceptions.UnknownProductException;
 import com.example.JavaFitnessTracker.exceptions.UnknownUserException;
-import com.example.JavaFitnessTracker.repositories.DayProgressProductRepository;
-import com.example.JavaFitnessTracker.repositories.DayProgressRepository;
-import com.example.JavaFitnessTracker.repositories.ProductRepository;
-import com.example.JavaFitnessTracker.repositories.UserRepository;
+import com.example.JavaFitnessTracker.exceptions.UnknownWorkoutException;
+import com.example.JavaFitnessTracker.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +22,8 @@ public class DayProgressService {
     private final DayProgressRepository dayProgressRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final WorkoutRepository workoutRepository;
+    private final DayProgressWorkoutRepository dayProgressWorkoutRepository;
 
     public void addProductToDayProgress(DayProgressProductRequest request) {
         DayProgress dayProgress = dayProgressRepository.findByUserIdAndRecordingDate(request.getUserId(), LocalDate.now())
@@ -46,5 +45,20 @@ public class DayProgressService {
         dayProgressProductRepository.save(dayProgressProduct);
     }
 
+    public void addWorkoutToDayProgress(DayProgressWorkoutRequest request) {
+        DayProgress dayProgress = dayProgressRepository.findByUserIdAndRecordingDate(request.getUserId(), LocalDate.now())
+                .orElseGet(() -> {
+                    DayProgress newDayProgress = new DayProgress();
+                    newDayProgress.setUser(userRepository.findById(request.getUserId()).orElseThrow(UnknownUserException::new));
+                    return newDayProgress;
+                });
+        Workout workout = workoutRepository.findById(request.getWorkoutId()).orElseThrow(UnknownWorkoutException::new);
 
+        DayProgressWorkout dayProgressWorkout = DayProgressWorkout.builder()
+                .workout(workout)
+                .dayProgress(dayProgressRepository.save(dayProgress))
+                .build();
+
+        dayProgressWorkoutRepository.save(dayProgressWorkout);
+    }
 }

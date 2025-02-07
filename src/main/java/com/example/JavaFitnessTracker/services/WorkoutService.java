@@ -34,6 +34,10 @@ public class WorkoutService {
         return workoutRepository.findById(id).orElse(null);
     }
 
+    public void deleteWorkoutById(Long id) {
+        workoutRepository.deleteById(id);
+    }
+
     public Workout createEmptyWorkout(WorkoutRequest workoutRequest) {
         Workout workout = Workout.builder()
                 .name(workoutRequest.getWorkoutName())
