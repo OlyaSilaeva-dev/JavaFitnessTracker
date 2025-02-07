@@ -30,8 +30,9 @@ public class WorkoutController {
     }
 
     @PostMapping("/add_exercise")
-    public ResponseEntity<Workout> addExercise(@RequestBody WorkoutExerciseRequest request) {
-        return ResponseEntity.ok(workoutService.AddExerciseToWorkout(request));
+    public ResponseEntity<String> addExercise(@RequestBody WorkoutExerciseRequest request) {
+        workoutService.AddExerciseToWorkout(request);
+        return ResponseEntity.ok("add exercise to workout");
     }
 
     @GetMapping("/{id}")

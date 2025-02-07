@@ -1,11 +1,14 @@
 package com.example.JavaFitnessTracker.entity;
 
 import com.example.JavaFitnessTracker.entity.enums.Intensity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 
 @Entity
@@ -30,8 +33,12 @@ public class Exercise {
     @Column(name = "calories")
     private Double calories;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
     @JoinColumn
     private Image image;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<WorkoutExercise> workoutExerciseSet;
 
 }

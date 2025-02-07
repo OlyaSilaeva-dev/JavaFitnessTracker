@@ -41,7 +41,7 @@ public class WorkoutService {
         return workoutRepository.save(workout);
     }
 
-    public Workout AddExerciseToWorkout(WorkoutExerciseRequest request) {
+    public void AddExerciseToWorkout(WorkoutExerciseRequest request) {
         Workout workout = workoutRepository.findById(request.getWorkoutId()).orElseThrow(UnknownWorkoutException::new);
         WorkoutExercise workoutExercise = WorkoutExercise.builder()
                 .workout(workout)
@@ -50,7 +50,6 @@ public class WorkoutService {
                 .build();
 
         workoutExerciseRepository.save(workoutExercise);
-        return workout;
     }
 
     public List<WorkoutExercise> getWorkoutExercisesByWorkoutId(Long workoutId) {

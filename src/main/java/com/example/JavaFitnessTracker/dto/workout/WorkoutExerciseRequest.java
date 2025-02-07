@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class WorkoutExerciseRequest {
-    private Long exerciseId;
     private Long workoutId;
+    private Long exerciseId;
     private Long interval;
 }

@@ -45,7 +45,7 @@ const ExerciseInfo = () => {
                     <ListGroup variant="flush" className="mt-3">
                         <ListGroup.Item><strong>Калории за час:</strong> {exercise.calories}</ListGroup.Item>
                     </ListGroup>
-                    <Button variant="outline-success" href={`/pages/workouts/${workoutId}/exercises/add_to_dayprogress/${exerciseId}`} className="mb-1">
+                    <Button variant="outline-success" href={`/pages/workouts/${workoutId}/exercises/add_to_workout/${exerciseId}`} className="mb-1">
                         Добавить упражнение к тренировке
                     </Button>
                     <Button variant="outline-danger" onClick={handleDelete}>

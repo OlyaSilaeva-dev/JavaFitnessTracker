@@ -1,5 +1,6 @@
 package com.example.JavaFitnessTracker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +25,6 @@ public class Workout {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = { CascadeType.ALL }, mappedBy = "workout")
+    @JsonIgnore
     private Set<WorkoutExercise> workoutExerciseSet;
 }

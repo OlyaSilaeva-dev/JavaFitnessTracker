@@ -25,13 +25,13 @@ const AddExerciseToWorkout = () => {
         e.preventDefault();
 
         const requestBody = {
-            workoutId: workoutId,
-            exerciseId: exerciseId,
-            interval: parseFloat(executionTime)
+            workoutId: parseInt(workoutId),
+            exerciseId: parseInt(exerciseId),
+            interval: parseInt(executionTime)
         };
 
         try {
-            await apiClient.post(`/api/v1/workouts/add_exercise`, requestBody);
+            await apiClient.post(`/api/v1/pages/workouts/add_exercise`, requestBody);
             window.location.href = "/api/v1/workouts";
         } catch (err) {
             console.error("Error:", err);
@@ -95,7 +95,6 @@ const AddExerciseToWorkout = () => {
                 </FormGroup>
                 <Button variant="primary" className="mx-auto d-flex flex-row justify-content-center" onClick={handleClick}>Добавить</Button>
             </Form>
-
         </Container>
     );
 };

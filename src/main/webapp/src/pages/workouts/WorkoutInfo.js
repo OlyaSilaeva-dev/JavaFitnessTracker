@@ -1,5 +1,16 @@
 import {useParams} from "react-router-dom";
-import {Alert, Button, ButtonGroup, Card, CardBody, CardHeader, Container, ListGroup, Spinner} from "react-bootstrap";
+import {
+    Alert,
+    Button,
+    ButtonGroup,
+    Card,
+    CardBody,
+    CardHeader,
+    Container,
+    ListGroup,
+    Spinner,
+    Table
+} from "react-bootstrap";
 import useWorkout from "./UseWorkout";
 import React, { useEffect, useState } from "react";
 import apiClient from "../../axios_api/apiClient";
@@ -40,20 +51,23 @@ const WorkoutInfo = () => {
                         Упражнений нет
                     </Alert>
                 ) : (
-                    <div>
+                    <table className="table table-bordered table-secondary mx-auto text-center">
+                        <thead className="table-active">
+                        <tr>
+                            <th className={"w-50"}>Упражнение</th>
+                            <th className={"w-50"}>Время выполнения</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         {workoutExercises.map((workoutExercise) => (
-                            <div key={workoutExercise.id} className="d-flex align-items-center">
-                                <div className="row row-cols-4 mb-1">
-                                    <h4 className="col">
-                                        {workoutExercise.exerciseId}
-                                    </h4>
-                                    <h4 className="col">
-                                        {workoutExercises.interval}
-                                    </h4>
-                                </div>
-                            </div>
+                            <tr key={workoutExercise.id}>
+                                <td className="w-50 p-2">{workoutExercise.exercise.name}</td>
+                                <td className="w-50 p-2">{workoutExercise.interval} мин.</td>
+                            </tr>
                         ))}
-                    </div>
+                        </tbody>
+                    </table>
+
                 )}
             </CardBody>
         </Card>

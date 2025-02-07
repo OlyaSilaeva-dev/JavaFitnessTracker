@@ -44,7 +44,7 @@ class App extends React.Component {
                 <Route path = "/pages/workouts/:id/exercises" element={<Exercise/>}/>
                 <Route path = "/pages/workouts/:id/exercises/new_exercise" element={<NewExercise/>}/>
                 <Route path = "/pages/workouts/:workoutId/exercises/:exerciseId" element={<ExerciseDetail/>}/>
-                <Route path = "/pages/workouts/:workoutId/exercises/add_to_dayprogress/:exerciseId" element={<AddExerciseToWorkout/>}/>
+                <Route path = "/pages/workouts/:workoutId/exercises/add_to_workout/:exerciseId" element={<AddExerciseToWorkout/>}/>
               </Routes>
             </BrowserRouter>
           </main>
