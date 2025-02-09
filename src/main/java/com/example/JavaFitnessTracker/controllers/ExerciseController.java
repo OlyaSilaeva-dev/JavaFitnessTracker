@@ -20,7 +20,7 @@ public class ExerciseController {
     private final ExerciseService exerciseService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Exercise>> exercises(@RequestParam(name = "name", required = false) String name) {
+    public ResponseEntity<List<ExerciseResponse>> exercises(@RequestParam(name = "name", required = false) String name) {
         return ResponseEntity.ok(exerciseService.list(name));
     }
 

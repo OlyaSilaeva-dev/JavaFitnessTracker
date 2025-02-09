@@ -72,16 +72,21 @@ public class DayProgressService {
         DayProgress dayProgress = dayProgressRepository.findByUserIdAndRecordingDate(request.getUserId(), request.getDay())
                 .orElseThrow(UnknownDayProgressException::new);
 
+        User user = userRepository.findById(request.getUserId()).orElseThrow(UnknownUserException::new);
+        Double dayNormCalories = calculateDayNormCalories(user);
+
         DayProgressResponse dayProgressResponse = DayProgressResponse.builder()
-                .dayNormCalories(calculateDayNormCalories(request.getUserId()))
+                .dayNormCalories(calculateDayNormCalories(user))
+                .dayNormProteins(calculateDayNormParam(dayNormCalories, "proteins"))
+                .dayNormFats(calculateDayNormParam(dayNormCalories, "fats"))
+                .dayNormCarbohydrates(calculateDayNormParam(dayNormCalories, "carbohydrates"))
+//                .breakfastCalories()
                 .build();
 
         return dayProgressResponse;
     }
 
-    private Double calculateDayNormCalories(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(UnknownUserException::new);
-
+    private Double calculateDayNormCalories(User user) {
         double coefActivity = (
                 switch (user.getActivity()) {
                     case LOWEST -> 1.2;
@@ -93,6 +98,21 @@ public class DayProgressService {
 
         double delta = (user.getGender() == Gender.MALE ? 5.0 : -161.0);
         double age = Year.now().getValue() - user.getBirthYear();
-        return (user.getWeight() + user.getHeight() - age * 5 + delta) * coefActivity;
+        double deltaCaloriesForPurpose = (
+                switch (user.getPurpose()) {
+                    case LOSE -> -200.0;
+                    case MAINTAIN -> 0.0;
+                    case GAIN -> 200.0;
+                });
+        return (user.getWeight() + user.getHeight() - age * 5 + delta) * coefActivity + deltaCaloriesForPurpose;
     }
+
+    private double calculateDayNormParam(Double dayNormCalories, String item) {
+        return switch (item) {
+            case "proteins", "carbohydrates" -> (dayNormCalories * 0.4) / 4.0;
+            case "fats" -> (dayNormCalories * 0.2) / 4.0;
+            default -> throw new IllegalStateException("Unexpected value: " + item);
+        };
+    }
+
 }

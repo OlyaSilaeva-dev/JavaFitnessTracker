@@ -1,7 +1,9 @@
 package com.example.JavaFitnessTracker.services;
 
 import com.example.JavaFitnessTracker.dto.exercise.ExerciseRequest;
+import com.example.JavaFitnessTracker.dto.exercise.ExerciseResponse;
 import com.example.JavaFitnessTracker.dto.product.ProductRequest;
+import com.example.JavaFitnessTracker.dto.product.ProductResponse;
 import com.example.JavaFitnessTracker.entity.Exercise;
 import com.example.JavaFitnessTracker.entity.Image;
 import com.example.JavaFitnessTracker.entity.Product;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,11 +29,19 @@ public class ExerciseService {
     private final ImageRepository imageRepository;
 
     @Transactional
-    public List<Exercise> list(String name) {
-        if (name != null) {
-            return exerciseRepository.findByName(name);
-        }
-        return exerciseRepository.findAll();
+    public List<ExerciseResponse> list(String name) {
+        List<Exercise> exercises = (name != null) ? exerciseRepository.findByName(name) : exerciseRepository.findAll();
+        return exercises.stream().map(this::convertToProductResponse).collect(Collectors.toList());
+    }
+
+    private ExerciseResponse convertToProductResponse(Exercise exercise) {
+        return ExerciseResponse.builder()
+                .id(exercise.getId())
+                .name(exercise.getName())
+                .calories(exercise.getCalories())
+                .intensity(exercise.getIntensity())
+                .ImageId(exercise.getImage().getId())
+                .build();
     }
 
     public void save(ExerciseRequest request, MultipartFile file) throws IOException {

@@ -10,16 +10,18 @@ CREATE TABLE IF NOT EXISTS image
 
 CREATE TABLE IF NOT EXISTS user_data
 (
-    "id"       BIGSERIAL PRIMARY KEY,
-    "email"    VARCHAR(50) NOT NULL,
-    "password" VARCHAR(60) NOT NULL,
-    "name"     VARCHAR(60),
-    "weight"   DOUBLE PRECISION,
-    "height"   DOUBLE PRECISION,
-    "gender"   VARCHAR(10) CHECK ("gender" IN ('MALE', 'FEMALE')),
-    "purpose"  VARCHAR(10) CHECK ("purpose" IN ('LOSE', 'MAINTAIN', 'GAIN')),
-    "avatar"   BIGINT,
-    "role"     VARCHAR(10) CHECK ("role" IN ('ADMIN', 'USER')),
+    "id"         BIGSERIAL PRIMARY KEY,
+    "email"      VARCHAR(50) NOT NULL,
+    "password"   VARCHAR(60) NOT NULL,
+    "name"       VARCHAR(60),
+    "weight"     DOUBLE PRECISION,
+    "height"     DOUBLE PRECISION,
+    "gender"     VARCHAR(10) CHECK ("gender" IN ('MALE', 'FEMALE')),
+    "purpose"    VARCHAR(10) CHECK ("purpose" IN ('LOSE', 'MAINTAIN', 'GAIN')),
+    "avatar"     BIGINT,
+    "role"       VARCHAR(10) CHECK ("role" IN ('ADMIN', 'USER')),
+    "activity"   VARCHAR(10) CHECK ("activity" IN ('LOWEST', 'LOWE', 'MEDIUM', 'HIGH', 'HIGHEST')),
+    "birth_year" INTEGER,
     FOREIGN KEY ("avatar") REFERENCES image ("id")
 );
 
@@ -56,7 +58,6 @@ CREATE TABLE IF NOT EXISTS dayprogress
     "id"             BIGSERIAL PRIMARY KEY,
     "user_id"        BIGINT,
     "recording_date" DATE,
-    "all_calories"   DOUBLE PRECISION,
     FOREIGN KEY ("user_id") REFERENCES user_data ("id")
 );
 
@@ -85,6 +86,7 @@ CREATE TABLE IF NOT EXISTS workout_exercise
     "id"          BIGSERIAL PRIMARY KEY,
     "workout_id"  BIGINT,
     "exercise_id" BIGINT,
+    "interval"    BIGINT,
     FOREIGN KEY ("exercise_id") REFERENCES exercise ("id"),
     FOREIGN KEY ("workout_id") REFERENCES workout ("id")
 );

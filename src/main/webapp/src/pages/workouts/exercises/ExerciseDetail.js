@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import apiClient from "../../../axios_api/apiClient";
 import {Container, Image, Spinner, Alert, Card, ListGroup, Button, ButtonGroup} from "react-bootstrap";
 import useExercise from "./UseExercise";
+import {withRouter} from "../../../router/WithRouter";
 
 const ExerciseInfo = () => {
     const { workoutId, exerciseId } = useParams();
@@ -57,4 +58,4 @@ const ExerciseInfo = () => {
     );
 };
 
-export default ExerciseInfo;
+export default withRouter(ExerciseInfo);

@@ -2,12 +2,10 @@ package com.example.JavaFitnessTracker.controllers;
 
 import com.example.JavaFitnessTracker.dto.product.ProductRequest;
 import com.example.JavaFitnessTracker.dto.product.ProductResponse;
-import com.example.JavaFitnessTracker.entity.Product;
 import com.example.JavaFitnessTracker.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +19,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> products(@RequestParam(name = "name", required = false) String name) {
+    public ResponseEntity<List<ProductResponse>> products(@RequestParam(name = "name", required = false) String name) {
         return ResponseEntity.ok(productService.list(name));
     }
 

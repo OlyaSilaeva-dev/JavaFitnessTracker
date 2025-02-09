@@ -1,6 +1,7 @@
 package com.example.JavaFitnessTracker.services;
 
 import com.example.JavaFitnessTracker.dto.product.ProductRequest;
+import com.example.JavaFitnessTracker.dto.product.ProductResponse;
 import com.example.JavaFitnessTracker.entity.Image;
 import com.example.JavaFitnessTracker.entity.Product;
 import com.example.JavaFitnessTracker.repositories.ImageRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -22,12 +24,23 @@ public class ProductService {
     private final ImageRepository imageRepository;
 
     @Transactional
-    public List<Product> list(String name) {
-        if (name != null) {
-            return productRepository.findByName(name);
-        }
-        return productRepository.findAll();
+    public List<ProductResponse> list(String name) {
+        List<Product> products = (name != null) ? productRepository.findByName(name) : productRepository.findAll();
+        return products.stream().map(this::convertToProductResponse).collect(Collectors.toList());
     }
+
+    private ProductResponse convertToProductResponse(Product product) {
+        return ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .calories(product.getCalories())
+                .fats(product.getFats())
+                .carbohydrates(product.getCarbohydrates())
+                .proteins(product.getProteins())
+                .imageId(product.getImage().getId())
+                .build();
+    }
+
 
     public void save(ProductRequest request, MultipartFile file) throws IOException {
         Image image;

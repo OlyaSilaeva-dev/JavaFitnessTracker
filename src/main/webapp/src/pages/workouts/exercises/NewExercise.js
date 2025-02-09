@@ -1,13 +1,13 @@
 import React from "react";
 import {Button, Container, Form, FormGroup, FormLabel} from "react-bootstrap";
 import apiClient from "../../../axios_api/apiClient";
+import {withRouter} from "../../../router/WithRouter";
 
 class NewExercise extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            id: this.props.id,
+            id: props.params.id,
             name: "",
             intensity: "",
             calories: "",
@@ -41,7 +41,7 @@ class NewExercise extends React.Component {
 
         try {
             await apiClient.post(`/api/v1/pages/exercises/create`, formData);
-            window.location.href = "/pages/workouts/workout_info/";
+            window.location.href = `/pages/workouts/${this.state.id}/exercises`;
         } catch (err) {
             console.log(err);
             this.setState({greeting: `Ошибка: ${err.message}`});
@@ -54,7 +54,7 @@ class NewExercise extends React.Component {
             <Form className="new-product-form" encType="multipart/form-data">
                 <FormGroup>
                     <Form.Label htmlFor="name">Название упражнения: </Form.Label>
-                    <Form.Control type="text" id="name" placeholder="название продукта"
+                    <Form.Control type="text" id="name" placeholder="название упражнения"
                                   onChange={(event) => this.setState({name: event.target.value})}></Form.Control>
                 </FormGroup>
                 <FormGroup>
@@ -93,4 +93,4 @@ class NewExercise extends React.Component {
     }
 }
 
-export default NewExercise;
+export default withRouter(NewExercise);
