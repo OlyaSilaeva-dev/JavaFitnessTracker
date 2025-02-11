@@ -1,12 +1,10 @@
-package com.example.JavaFitnessTracker.dto.dayProgress;
+package com.example.JavaFitnessTracker.dto.dayProgress.dayProgressProduct;
 
 import com.example.JavaFitnessTracker.entity.enums.Meal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor

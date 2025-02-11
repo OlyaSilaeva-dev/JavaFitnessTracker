@@ -7,16 +7,15 @@ import {
     Image,
     ButtonGroup,
     Button,
-    ListGroup,
-    ListGroupItem,
-    Form,
-    FormGroup, FormLabel, FormControl
+    Form,Alert
 } from "react-bootstrap";
-// import Slider from "../other/Slider";
 
 const HelloPage = () => {
     const [user, setUser] = useState(null);
     const [avatarURL, setAvatarURL] = useState(null);
+    const [loading, setLoading] = useState();
+    const [error, setError] = useState();
+    const [dayProgressResponse, setDayProgressResponse] = useState();
 
     useEffect(() => {
         const fetchGet = async () => {
@@ -43,7 +42,7 @@ const HelloPage = () => {
                 const imageUrl = URL.createObjectURL(response.data);
                 setAvatarURL(imageUrl);
             } catch (err) {
-                // setError("Ошибка при загрузке изображения");
+                setError("Ошибка при загрузке изображения");
             }
         };
 
@@ -53,6 +52,30 @@ const HelloPage = () => {
             if (avatarURL) URL.revokeObjectURL(avatarURL);
         };
     }, [user]);
+
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchDayProgress = async () => {
+            const userId = localStorage.getItem("userId");
+            const currentDate = new Date().toLocaleDateString();
+
+            try {
+                const response = await apiClient.get(`/api/v1/day_progress/info?userId=${userId}&date=${currentDate}`);
+                setDayProgressResponse(response.data);
+            } catch (err) {
+                setError("не удалось загрузить данные за заданный день");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchDayProgress();
+    }, [user]);
+
+    if (loading) return <Spinner animation="border" />;
+    if (error) return <Alert variant="danger">{error}</Alert>;
+
 
     const currentDate = new Date().toLocaleDateString();
 
@@ -85,10 +108,10 @@ const HelloPage = () => {
 
                 <div className={"d-flex justify-content-between w-full"}>
                     <Form className={" border border-black rounded-circle m-2 w-25"}>
-                        <h6 className={"d-flex justify-content-center m-2"}>Потребление: ...</h6>
+                        <h6 className={"d-flex justify-content-center m-2"}>Потребление: {dayProgressResponse ? Math.round(dayProgressResponse.intakeCalories) : null} </h6>
                     </Form>
                     <Form className={" border border-black rounded-circle me-3 ms-3 w-50"}>
-                        <h4 className={"d-flex text-center m-2"}><strong>Ккал. осталось: ...</strong></h4>
+                        <h4 className={"d-flex text-center m-2"}><strong>Ккал. осталось: {dayProgressResponse ? Math.round(dayProgressResponse.dayNormCalories) - Math.round(dayProgressResponse.intakeCalories) : null} </strong></h4>
                     </Form>
                     <Form className={"border border-black rounded-circle m-2 w-25"}>
                         <h6 className={"d-flex justify-content-center m-2"}>Расход: ...</h6>

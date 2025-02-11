@@ -21,8 +21,4 @@ public class DayProgressResponse {
     private Double dayNormFats;
     private Double dayNormProteins;
     private Double dayNormCarbohydrates;
-
-    private Double breakfastCalories;
-    private Double lunchCalories;
-    private Double dinnerCalories;
 }

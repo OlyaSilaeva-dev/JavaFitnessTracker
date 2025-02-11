@@ -1,4 +1,4 @@
-package com.example.JavaFitnessTracker.dto.dayProgress;
+package com.example.JavaFitnessTracker.dto.dayProgress.dayProgressWorkout;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

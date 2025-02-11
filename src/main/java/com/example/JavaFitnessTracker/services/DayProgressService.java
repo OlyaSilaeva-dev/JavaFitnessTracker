@@ -1,9 +1,10 @@
 package com.example.JavaFitnessTracker.services;
 
-import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressProductRequest;
+import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressProduct.DayProgressProductRequest;
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressRequest;
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressResponse;
-import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressWorkoutRequest;
+import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressProduct.DayProgressProductResponse;
+import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressWorkout.DayProgressWorkoutRequest;
 import com.example.JavaFitnessTracker.entity.*;
 import com.example.JavaFitnessTracker.entity.enums.Gender;
 import com.example.JavaFitnessTracker.exceptions.UnknownDayProgressException;
@@ -13,12 +14,11 @@ import com.example.JavaFitnessTracker.exceptions.UnknownWorkoutException;
 import com.example.JavaFitnessTracker.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.type.descriptor.sql.internal.Scale6IntervalSecondDdlType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -68,22 +68,35 @@ public class DayProgressService {
         dayProgressWorkoutRepository.save(dayProgressWorkout);
     }
 
-    public DayProgressResponse getDayProgressInfo(DayProgressRequest request) {
-        DayProgress dayProgress = dayProgressRepository.findByUserIdAndRecordingDate(request.getUserId(), request.getDay())
-                .orElseThrow(UnknownDayProgressException::new);
-
-        User user = userRepository.findById(request.getUserId()).orElseThrow(UnknownUserException::new);
+    public DayProgressResponse getDayProgressInfo(Long userId, LocalDate date) {
+        User user = userRepository.findById(userId).orElseThrow(UnknownUserException::new);
+        DayProgress dayProgress = dayProgressRepository.findByUserIdAndRecordingDate(userId, date)
+                .orElseGet(() -> {
+                    DayProgress newDayProgress = new DayProgress();
+                    newDayProgress.setUser(user);
+                    return newDayProgress;
+                });
         Double dayNormCalories = calculateDayNormCalories(user);
+        if (dayProgress.getDayProgressProducts() == null) {
+            return DayProgressResponse.builder()
+                    .dayNormCalories(calculateDayNormCalories(user))
+                    .dayNormProteins(calculateDayNormParam(dayNormCalories, "proteins"))
+                    .dayNormFats(calculateDayNormParam(dayNormCalories, "fats"))
+                    .dayNormCarbohydrates(calculateDayNormParam(dayNormCalories, "carbohydrates"))
+                    .build();
+        }
 
-        DayProgressResponse dayProgressResponse = DayProgressResponse.builder()
-                .dayNormCalories(calculateDayNormCalories(user))
+        List<DayProgressProductResponse> dayProgressProductResponses = dayProgressProductRepository.getCaloriesAndGramsOfProduct(dayProgress.getId());
+        return DayProgressResponse.builder()
+                .dayNormCalories(dayNormCalories)
                 .dayNormProteins(calculateDayNormParam(dayNormCalories, "proteins"))
                 .dayNormFats(calculateDayNormParam(dayNormCalories, "fats"))
                 .dayNormCarbohydrates(calculateDayNormParam(dayNormCalories, "carbohydrates"))
-//                .breakfastCalories()
+                .intakeCalories(calculateIntakeParam(dayProgressProductResponses, "calories"))
+                .proteins(calculateIntakeParam(dayProgressProductResponses, "proteins"))
+                .fats(calculateIntakeParam(dayProgressProductResponses, "fats"))
+                .carbohydrates(calculateIntakeParam(dayProgressProductResponses, "carbohydrates"))
                 .build();
-
-        return dayProgressResponse;
     }
 
     private Double calculateDayNormCalories(User user) {
@@ -104,7 +117,7 @@ public class DayProgressService {
                     case MAINTAIN -> 0.0;
                     case GAIN -> 200.0;
                 });
-        return (user.getWeight() + user.getHeight() - age * 5 + delta) * coefActivity + deltaCaloriesForPurpose;
+        return (user.getWeight() * 10.0 + user.getHeight() * 6.25 - age * 5.0 + delta) * coefActivity + deltaCaloriesForPurpose;
     }
 
     private double calculateDayNormParam(Double dayNormCalories, String item) {
@@ -115,4 +128,37 @@ public class DayProgressService {
         };
     }
 
+    private Double calculateIntakeParam(List<DayProgressProductResponse> responseList, String param) {
+        Double sum = 0.0;
+        switch (param) {
+            case "proteins":
+                for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+                    sum += dayProgressProductResponse.getGramsOfProduct() * dayProgressProductResponse.getProteins() / 100.0;
+                }
+                break;
+            case "carbohydrates":
+                for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+                    sum += dayProgressProductResponse.getGramsOfProduct() * dayProgressProductResponse.getCarbohydrates() / 100.0;
+                }
+                break;
+            case "fats":
+                for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+                    sum += dayProgressProductResponse.getGramsOfProduct() * dayProgressProductResponse.getFats() / 100.0;
+                }
+                break;
+            case "calories":
+                for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+                    sum += dayProgressProductResponse.getCalories();
+                }
+                break;
+            default:
+                return 0.0;
+        }
+        return sum;
+    }
+
+//    private Double calculateBurnedCalories(User user) {
+//        Double sum = 0.0;
+//        return sum;
+//    }
 }
