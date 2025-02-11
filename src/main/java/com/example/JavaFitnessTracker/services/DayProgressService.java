@@ -148,7 +148,7 @@ public class DayProgressService {
                 break;
             case "calories":
                 for (DayProgressProductResponse dayProgressProductResponse : responseList) {
-                    sum += dayProgressProductResponse.getCalories();
+                    sum += dayProgressProductResponse.getCalories() * dayProgressProductResponse.getGramsOfProduct() / 100.0;
                 }
                 break;
             default:
