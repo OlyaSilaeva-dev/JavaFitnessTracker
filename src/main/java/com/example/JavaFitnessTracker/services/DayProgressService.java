@@ -5,6 +5,7 @@ import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressRequest;
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressResponse;
 import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressProduct.DayProgressProductResponse;
 import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressWorkout.DayProgressWorkoutRequest;
+import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressWorkout.DayProgressWorkoutResponse;
 import com.example.JavaFitnessTracker.entity.*;
 import com.example.JavaFitnessTracker.entity.enums.Gender;
 import com.example.JavaFitnessTracker.exceptions.UnknownDayProgressException;
@@ -87,6 +88,7 @@ public class DayProgressService {
         }
 
         List<DayProgressProductResponse> dayProgressProductResponses = dayProgressProductRepository.getCaloriesAndGramsOfProduct(dayProgress.getId());
+        Double burnedCalories = calculateBurnedCalories(dayProgress);
         return DayProgressResponse.builder()
                 .dayNormCalories(dayNormCalories)
                 .dayNormProteins(calculateDayNormParam(dayNormCalories, "proteins"))
@@ -96,6 +98,7 @@ public class DayProgressService {
                 .proteins(calculateIntakeParam(dayProgressProductResponses, "proteins"))
                 .fats(calculateIntakeParam(dayProgressProductResponses, "fats"))
                 .carbohydrates(calculateIntakeParam(dayProgressProductResponses, "carbohydrates"))
+                .burnedCalories(burnedCalories)
                 .build();
     }
 
@@ -113,7 +116,7 @@ public class DayProgressService {
         double age = Year.now().getValue() - user.getBirthYear();
         double deltaCaloriesForPurpose = (
                 switch (user.getPurpose()) {
-                    case LOSE -> -200.0;
+                    case LOSE -> -300.0;
                     case MAINTAIN -> 0.0;
                     case GAIN -> 200.0;
                 });
@@ -157,8 +160,12 @@ public class DayProgressService {
         return sum;
     }
 
-//    private Double calculateBurnedCalories(User user) {
-//        Double sum = 0.0;
-//        return sum;
-//    }
+    private Double calculateBurnedCalories(DayProgress dayProgress) {
+        Double sum = 0.0;
+        List<DayProgressWorkoutResponse> responseList = dayProgressWorkoutRepository.getExercisesAndIntervals(dayProgress.getId());
+        for (DayProgressWorkoutResponse response : responseList) {
+            sum += response.getCalories() * response.getInterval() / 60.0;
+        }
+        return sum;
+    }
 }

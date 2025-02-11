@@ -61,6 +61,7 @@ const WorkoutInfo = () => {
 
         try {
             await apiClient.post(`api/v1/day_progress/add_workout`, requestBody);
+            window.location.href = "/hello-page"
         } catch (err) {
             console.error("Ошибка при сохранении тренировки:", err);
             alert("Ошибка при сохранении тренировки!");

@@ -111,10 +111,10 @@ const HelloPage = () => {
                         <h6 className={"d-flex justify-content-center m-2"}>Потребление: {dayProgressResponse ? Math.round(dayProgressResponse.intakeCalories) : null} </h6>
                     </Form>
                     <Form className={" border border-black rounded-circle me-3 ms-3 w-50"}>
-                        <h4 className={"d-flex text-center m-2"}><strong>Ккал. осталось: {dayProgressResponse ? Math.round(dayProgressResponse.dayNormCalories) - Math.round(dayProgressResponse.intakeCalories) : null} </strong></h4>
+                        <h4 className={"d-flex text-center m-2"}><strong>Ккал. осталось: {dayProgressResponse ? Math.round(dayProgressResponse.dayNormCalories) - Math.round(dayProgressResponse.intakeCalories) + Math.round(dayProgressResponse.burnedCalories) : null} </strong></h4>
                     </Form>
                     <Form className={"border border-black rounded-circle m-2 w-25"}>
-                        <h6 className={"d-flex justify-content-center m-2"}>Расход: ...</h6>
+                        <h6 className={"d-flex justify-content-center m-2"}>Расход: {dayProgressResponse ? Math.round(dayProgressResponse.burnedCalories) : null}</h6>
                     </Form>
                 </div>
             </Container>

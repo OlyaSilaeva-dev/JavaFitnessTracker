@@ -2,6 +2,7 @@ package com.example.JavaFitnessTracker.repositories;
 
 import com.example.JavaFitnessTracker.entity.DayProgress;
 import com.example.JavaFitnessTracker.entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,6 @@ import java.util.Optional;
 public interface DayProgressRepository  extends JpaRepository<DayProgress, Long> {
     Optional<DayProgress> findByUser(User user);
 
+    @Transactional
     Optional<DayProgress> findByUserIdAndRecordingDate(Long userId, LocalDate RecordingDate);
 }

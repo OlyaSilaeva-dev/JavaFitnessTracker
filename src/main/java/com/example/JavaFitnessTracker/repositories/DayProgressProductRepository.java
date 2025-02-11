@@ -12,8 +12,9 @@ import java.util.List;
 @Repository
 public interface DayProgressProductRepository extends JpaRepository<DayProgressProduct, Long> {
 
-    @Query(value = "select calories, proteins, fats, carbohydrates, grams_of_product " +
-            "from dayprogress_product, product " +
-            "where product.id = dayprogress_product.product_id and dayprogress_product.dayprogress_id = :dayprogressId", nativeQuery = true)
+    @Query(value = "select p.calories, p.proteins, p.fats, p.carbohydrates, dp.grams_of_product " +
+            "from dayprogress_product dp " +
+            "join product p ON p.id = dp.product_id " +
+            "where dp.dayprogress_id = :dayprogressId", nativeQuery = true)
     List<DayProgressProductResponse> getCaloriesAndGramsOfProduct(@Param("dayprogressId")Long dayprogressId);
 }
