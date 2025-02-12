@@ -14,6 +14,7 @@ const HelloPage = () => {
     const [user, setUser] = useState(null);
     const [avatarURL, setAvatarURL] = useState(null);
     const [loading, setLoading] = useState();
+    const [date, setDate] = useState(new Date().toISOString().split("T")[0])
     const [error, setError] = useState();
     const [dayProgressResponse, setDayProgressResponse] = useState();
 
@@ -58,10 +59,9 @@ const HelloPage = () => {
 
         const fetchDayProgress = async () => {
             const userId = localStorage.getItem("userId");
-            const currentDate = new Date().toLocaleDateString();
 
             try {
-                const response = await apiClient.get(`/api/v1/day_progress/info?userId=${userId}&date=${currentDate}`);
+                const response = await apiClient.get(`/api/v1/day_progress/info?userId=${userId}&date=${date}`);
                 setDayProgressResponse(response.data);
             } catch (err) {
                 setError("не удалось загрузить данные за заданный день");
@@ -71,13 +71,15 @@ const HelloPage = () => {
         }
 
         fetchDayProgress();
-    }, [user]);
+    }, [user, date]);
+
+    const handleDateChange = (offset) => {
+        const currentDate = new Date(date);
+        currentDate.setDate(currentDate.getDate() + offset);
+        setDate(currentDate.toISOString().split("T")[0]);     }
 
     if (loading) return <Spinner animation="border" />;
     if (error) return <Alert variant="danger">{error}</Alert>;
-
-
-    const currentDate = new Date().toLocaleDateString();
 
     return (
         <>
@@ -95,13 +97,15 @@ const HelloPage = () => {
                 )}
 
                 <ButtonGroup className={"w-full mb-5"}>
-                    <Button className={"border-black btn-warning btn-outline-light w-25"}>
+                    <Button className={"border-black btn-warning btn-outline-light w-25"}
+                    onClick={() => handleDateChange(-1)}>
                         <div className={"text-dark"}>Предыдущий</div>
                     </Button>
                     <Button className={"border-black btn-warning btn-outline-light w-50"}>
-                        <div className={"text-dark"}>{currentDate}</div>
+                        <div className={"text-dark"}>{date}</div>
                     </Button>
-                    <Button className={"border-black btn-warning btn-outline-light w-25"}>
+                    <Button className={"border-black btn-warning btn-outline-light w-25"}
+                            onClick={() => handleDateChange(+1)}>
                         <div className={"text-dark"}>Следующий</div>
                     </Button>
                 </ButtonGroup>
