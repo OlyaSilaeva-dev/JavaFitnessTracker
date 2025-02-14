@@ -1,5 +1,6 @@
 package com.example.JavaFitnessTracker.controllers;
 
+import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressMealsResponse;
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressRequest;
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressResponse;
 import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressProduct.DayProgressProductRequest;
@@ -34,5 +35,10 @@ public class DayProgressController {
     @GetMapping("/info")
     public ResponseEntity<DayProgressResponse> getDayProgressInfo(@RequestParam Long userId, @RequestParam LocalDate date) {
         return ResponseEntity.ok(dayProgressService.getDayProgressInfo(userId, date));
+    }
+
+    @GetMapping("/info/meals")
+    public ResponseEntity<DayProgressMealsResponse> getDayProgressMeals(@RequestParam Long userId, @RequestParam LocalDate date) {
+        return ResponseEntity.ok(dayProgressService.getDayProgressMealsInfo(userId, date));
     }
 }

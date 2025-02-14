@@ -1,14 +1,14 @@
 package com.example.JavaFitnessTracker.services;
 
+import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressMealsResponse;
 import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressProduct.DayProgressProductRequest;
-import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressRequest;
 import com.example.JavaFitnessTracker.dto.dayProgress.DayProgressResponse;
 import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressProduct.DayProgressProductResponse;
 import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressWorkout.DayProgressWorkoutRequest;
 import com.example.JavaFitnessTracker.dto.dayProgress.dayProgressWorkout.DayProgressWorkoutResponse;
 import com.example.JavaFitnessTracker.entity.*;
 import com.example.JavaFitnessTracker.entity.enums.Gender;
-import com.example.JavaFitnessTracker.exceptions.UnknownDayProgressException;
+import com.example.JavaFitnessTracker.entity.enums.Meal;
 import com.example.JavaFitnessTracker.exceptions.UnknownProductException;
 import com.example.JavaFitnessTracker.exceptions.UnknownUserException;
 import com.example.JavaFitnessTracker.exceptions.UnknownWorkoutException;
@@ -102,6 +102,33 @@ public class DayProgressService {
                 .build();
     }
 
+    public DayProgressMealsResponse getDayProgressMealsInfo(Long userId, LocalDate date) {
+        User user = userRepository.findById(userId).orElseThrow(UnknownUserException::new);
+        DayProgress dayProgress = dayProgressRepository.findByUserIdAndRecordingDate(userId, date)
+                .orElseGet(() -> {
+                    DayProgress newDayProgress = new DayProgress();
+                    newDayProgress.setUser(user);
+                    return newDayProgress;
+                });
+        List<DayProgressProductResponse> dayProgressProductBreakfastResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.BREAKFAST);
+        List<DayProgressProductResponse> dayProgressProductLunchResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.LUNCH);
+        List<DayProgressProductResponse> dayProgressProductDinnerResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.DINNER);
+
+        return DayProgressMealsResponse.builder()
+                .breakfastCalories(calculateIntakeParam(dayProgressProductBreakfastResponses, "calories"))
+                .breakfastProteins(calculateIntakeParam(dayProgressProductBreakfastResponses, "proteins"))
+                .breakfastFats(calculateIntakeParam(dayProgressProductBreakfastResponses, "fats"))
+                .breakfastCarbohydrates(calculateIntakeParam(dayProgressProductBreakfastResponses, "carbohydrates"))
+                .lunchCalories(calculateIntakeParam(dayProgressProductLunchResponses, "calories"))
+                .lunchProteins(calculateIntakeParam(dayProgressProductLunchResponses, "proteins"))
+                .lunchFats(calculateIntakeParam(dayProgressProductLunchResponses, "fats"))
+                .lunchCarbohydrates(calculateIntakeParam(dayProgressProductLunchResponses, "carbohydrates"))
+                .dinnerCalories(calculateIntakeParam(dayProgressProductDinnerResponses, "calories"))
+                .dinnerFats(calculateIntakeParam(dayProgressProductDinnerResponses, "fats"))
+                .dinnerCarbohydrates(calculateIntakeParam(dayProgressProductDinnerResponses, "carbohydrates"))
+                .build();
+    }
+
     private Double calculateDayNormCalories(User user) {
         double coefActivity = (
                 switch (user.getActivity()) {
@@ -132,36 +159,31 @@ public class DayProgressService {
     }
 
     private Double calculateIntakeParam(List<DayProgressProductResponse> responseList, String param) {
-        Double sum = 0.0;
-        switch (param) {
-            case "proteins":
-                for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+        double sum = 0.0;
+        for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+            switch (param) {
+                case "proteins":
                     sum += dayProgressProductResponse.getGramsOfProduct() * dayProgressProductResponse.getProteins() / 100.0;
-                }
-                break;
-            case "carbohydrates":
-                for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+                    break;
+                case "carbohydrates":
                     sum += dayProgressProductResponse.getGramsOfProduct() * dayProgressProductResponse.getCarbohydrates() / 100.0;
-                }
-                break;
-            case "fats":
-                for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+                    break;
+                case "fats":
                     sum += dayProgressProductResponse.getGramsOfProduct() * dayProgressProductResponse.getFats() / 100.0;
-                }
-                break;
-            case "calories":
-                for (DayProgressProductResponse dayProgressProductResponse : responseList) {
+                    break;
+                case "calories":
                     sum += dayProgressProductResponse.getCalories() * dayProgressProductResponse.getGramsOfProduct() / 100.0;
-                }
-                break;
-            default:
-                return 0.0;
+                    break;
+                default:
+                    return 0.0;
+            }
         }
         return sum;
     }
 
+
     private Double calculateBurnedCalories(DayProgress dayProgress) {
-        Double sum = 0.0;
+        double sum = 0.0;
         List<DayProgressWorkoutResponse> responseList = dayProgressWorkoutRepository.getExercisesAndIntervals(dayProgress.getId());
         for (DayProgressWorkoutResponse response : responseList) {
             sum += response.getCalories() * response.getInterval() / 60.0;
