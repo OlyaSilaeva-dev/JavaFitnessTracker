@@ -24,5 +24,5 @@ public interface DayProgressProductRepository extends JpaRepository<DayProgressP
             "from dayprogress_product dp " +
             "join product p ON p.id = dp.product_id " +
             "where dp.dayprogress_id = :dayprogressId and dp.meal = :meal", nativeQuery = true)
-    List<DayProgressProductResponse> getProductInfoByDayAndMeal(@Param("dayprogressId")Long dayprogressId, @Param("meal")Meal meal);
+    List<DayProgressProductResponse> getProductInfoByDayAndMeal(@Param("dayprogressId")Long dayprogressId, @Param("meal")String meal);
 }

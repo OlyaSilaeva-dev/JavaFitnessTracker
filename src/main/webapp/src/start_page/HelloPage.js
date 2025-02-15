@@ -7,7 +7,7 @@ import {
     Image,
     ButtonGroup,
     Button,
-    Form,Alert
+    Form, Alert, Card, CardHeader, CardBody, ListGroupItem
 } from "react-bootstrap";
 
 const HelloPage = () => {
@@ -17,6 +17,7 @@ const HelloPage = () => {
     const [date, setDate] = useState(new Date().toISOString().split("T")[0])
     const [error, setError] = useState();
     const [dayProgressResponse, setDayProgressResponse] = useState();
+    const [dayProgressMealsResponse, setDayProgressMealsResponse] = useState();
 
     useEffect(() => {
         const fetchGet = async () => {
@@ -63,6 +64,26 @@ const HelloPage = () => {
             try {
                 const response = await apiClient.get(`/api/v1/day_progress/info?userId=${userId}&date=${date}`);
                 setDayProgressResponse(response.data);
+            } catch (err) {
+                setError("не удалось загрузить данные за заданный день");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchDayProgress();
+    }, [user, date]);
+
+
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchDayProgress = async () => {
+            const userId = localStorage.getItem("userId");
+
+            try {
+                const responseMeals = await apiClient.get(`/api/v1/day_progress/info/meals?userId=${userId}&date=${date}`);
+                setDayProgressMealsResponse(responseMeals.data);
             } catch (err) {
                 setError("не удалось загрузить данные за заданный день");
             } finally {
@@ -120,6 +141,36 @@ const HelloPage = () => {
                     <Form className={"border border-black rounded-circle m-2 w-25"}>
                         <h6 className={"d-flex justify-content-center m-2"}>Расход: {dayProgressResponse ? Math.round(dayProgressResponse.burnedCalories) : null}</h6>
                     </Form>
+                </div>
+
+                <div className={"d-flex justify-content-between mx-3"}>
+                    <Card className={"m-2"}>
+                        <CardHeader>Завтрак</CardHeader>
+                        <CardBody>
+                            <ListGroupItem>Калории: {dayProgressMealsResponse ? Math.round(dayProgressMealsResponse.breakfastCalories) : null}</ListGroupItem>
+                            <ListGroupItem>Белки: {dayProgressMealsResponse ? dayProgressMealsResponse.breakfastProteins : null}</ListGroupItem>
+                            <ListGroupItem>Жиры: {dayProgressMealsResponse ? dayProgressMealsResponse.breakfastFats : null}</ListGroupItem>
+                            <ListGroupItem>Углеводы: {dayProgressMealsResponse ? dayProgressMealsResponse.breakfastCarbohydrates : null}</ListGroupItem>
+                        </CardBody>
+                    </Card>
+                    <Card className={"m-2"}>
+                        <CardHeader>Обед</CardHeader>
+                        <CardBody>
+                            <ListGroupItem>Калории: {dayProgressMealsResponse ? Math.round(dayProgressMealsResponse.lunchCalories) : null}</ListGroupItem>
+                            <ListGroupItem>Белки: {dayProgressMealsResponse ? dayProgressMealsResponse.lunchProteins : null}</ListGroupItem>
+                            <ListGroupItem>Жиры: {dayProgressMealsResponse ? dayProgressMealsResponse.lunchFats : null}</ListGroupItem>
+                            <ListGroupItem>Углеводы: {dayProgressMealsResponse ? dayProgressMealsResponse.lunchCarbohydrates : null}</ListGroupItem>
+                        </CardBody>
+                    </Card>
+                    <Card className={"m-2"}>
+                        <CardHeader>Ужин</CardHeader>
+                        <CardBody>
+                            <ListGroupItem>Калории: {dayProgressMealsResponse ? Math.round(dayProgressMealsResponse.dinnerCalories) : null}</ListGroupItem>
+                            <ListGroupItem>Белки: {dayProgressMealsResponse ? dayProgressMealsResponse.dinnerProteins : null}</ListGroupItem>
+                            <ListGroupItem>Жиры: {dayProgressMealsResponse ? dayProgressMealsResponse.dinnerFats : null}</ListGroupItem>
+                            <ListGroupItem>Углеводы: {dayProgressMealsResponse ? dayProgressMealsResponse.dinnerCarbohydrates : null}</ListGroupItem>
+                        </CardBody>
+                    </Card>
                 </div>
             </Container>
 

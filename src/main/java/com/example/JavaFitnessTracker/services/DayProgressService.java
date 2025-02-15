@@ -110,9 +110,9 @@ public class DayProgressService {
                     newDayProgress.setUser(user);
                     return newDayProgress;
                 });
-        List<DayProgressProductResponse> dayProgressProductBreakfastResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.BREAKFAST);
-        List<DayProgressProductResponse> dayProgressProductLunchResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.LUNCH);
-        List<DayProgressProductResponse> dayProgressProductDinnerResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.DINNER);
+        List<DayProgressProductResponse> dayProgressProductBreakfastResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.BREAKFAST.toString());
+        List<DayProgressProductResponse> dayProgressProductLunchResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.LUNCH.toString());
+        List<DayProgressProductResponse> dayProgressProductDinnerResponses = dayProgressProductRepository.getProductInfoByDayAndMeal(dayProgress.getId(), Meal.DINNER.toString());
 
         return DayProgressMealsResponse.builder()
                 .breakfastCalories(calculateIntakeParam(dayProgressProductBreakfastResponses, "calories"))
