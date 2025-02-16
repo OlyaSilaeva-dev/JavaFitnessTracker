@@ -133,14 +133,14 @@ class Register extends React.Component {
                         </Form.Control>
                     </FormGroup>
                     <FormGroup>
-                    <Form.Label htmlFor="purpose">Purpose: </Form.Label>
+                    <Form.Label htmlFor="purpose">Цель: </Form.Label>
                         <Form.Control
                             as="select"
                             id="purpose"
                             onChange={(event) => this.setState({purpose: event.target.value})}>
-                            <option value="LOSE">lose</option>
-                            <option value="MAINTAIN">maintain</option>
-                            <option value="GAIN">gain</option>
+                            <option value="LOSE">сброс веса</option>
+                            <option value="MAINTAIN">удержание веса</option>
+                            <option value="GAIN">набор веса</option>
                         </Form.Control>
                     </FormGroup>
                     <FormGroup>
