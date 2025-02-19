@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS user_data
     "purpose"    VARCHAR(10) CHECK ("purpose" IN ('LOSE', 'MAINTAIN', 'GAIN')),
     "avatar"     BIGINT,
     "role"       VARCHAR(10) CHECK ("role" IN ('ADMIN', 'USER')),
-    "activity"   VARCHAR(10) CHECK ("activity" IN ('LOWEST', 'LOWE', 'MEDIUM', 'HIGH', 'HIGHEST')),
+    "activity"   VARCHAR(10) CHECK ("activity" IN ('LOWEST', 'LOW', 'MEDIUM', 'HIGH', 'HIGHEST')),
     "birth_year" INTEGER,
-    FOREIGN KEY ("avatar") REFERENCES image ("id")
+    FOREIGN KEY ("avatar") REFERENCES image ("id") ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS workout
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS exercise
     "intensity" VARCHAR(255) CHECK ("intensity" IN ('LIGHT', 'MEDIUM', 'HARD')),
     "calories"  DOUBLE PRECISION,
     "image"     BIGINT,
-    FOREIGN KEY ("image") REFERENCES image ("id")
+    FOREIGN KEY ("image") REFERENCES image ("id") ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS product
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS product
     "fats"          DOUBLE PRECISION CHECK ("fats" >= 0),
     "carbohydrates" DOUBLE PRECISION CHECK ("carbohydrates" >= 0),
     "image"         BIGINT,
-    FOREIGN KEY ("image") REFERENCES image ("id")
+    FOREIGN KEY ("image") REFERENCES image ("id") ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS dayprogress
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS dayprogress
     "id"             BIGSERIAL PRIMARY KEY,
     "user_id"        BIGINT,
     "recording_date" DATE,
-    FOREIGN KEY ("user_id") REFERENCES user_data ("id")
+    FOREIGN KEY ("user_id") REFERENCES user_data ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS dayprogress_product
@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS dayprogress_product
     "product_id"       BIGINT,
     "grams_of_product" DOUBLE PRECISION,
     "meal"             VARCHAR(255) CHECK ("meal" IN ('BREAKFAST', 'LUNCH', 'DINNER', 'SNACK')),
-    FOREIGN KEY ("dayprogress_id") REFERENCES dayprogress ("id"),
-    FOREIGN KEY ("product_id") REFERENCES product ("id")
+    FOREIGN KEY ("dayprogress_id") REFERENCES dayprogress ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("product_id") REFERENCES product ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS dayprogress_workout
@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS dayprogress_workout
     "id"             BIGSERIAL PRIMARY KEY,
     "dayprogress_id" BIGINT,
     "workout_id"     BIGINT,
-    FOREIGN KEY ("dayprogress_id") REFERENCES dayprogress ("id"),
-    FOREIGN KEY ("workout_id") REFERENCES workout ("id")
+    FOREIGN KEY ("dayprogress_id") REFERENCES dayprogress ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("workout_id") REFERENCES workout ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS workout_exercise
@@ -87,10 +87,70 @@ CREATE TABLE IF NOT EXISTS workout_exercise
     "workout_id"  BIGINT,
     "exercise_id" BIGINT,
     "interval"    BIGINT,
-    FOREIGN KEY ("exercise_id") REFERENCES exercise ("id"),
-    FOREIGN KEY ("workout_id") REFERENCES workout ("id")
+    FOREIGN KEY ("exercise_id") REFERENCES exercise ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("workout_id") REFERENCES workout ("id") ON DELETE CASCADE
 );
 
+CREATE TABLE logs
+(
+    id         BIGSERIAL PRIMARY KEY,
+    table_name TEXT NOT NULL,
+    operation  TEXT NOT NULL CHECK (operation IN ('INSERT', 'UPDATE', 'DELETE')),
+    record_id  BIGINT,
+    timestamp  TIMESTAMP DEFAULT NOW(),
+    old_data   JSONB,
+    new_data   JSONB
+);
+
+CREATE OR REPLACE FUNCTION log_changes() RETURNS TRIGGER AS
+$$
+BEGIN
+    INSERT INTO logs (table_name, operation, record_id, timestamp, old_data, new_data)
+    VALUES (TG_TABLE_NAME,
+            TG_OP,
+            COALESCE(NEW.id, OLD.id),
+            CURRENT_TIMESTAMP,
+            CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(OLD) END,
+            CASE WHEN TG_OP = ('UPDATE', 'INSERT') THEN row_to_json(NEW) END);
+    RETURN COALESCE(NEW, OLD);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER user_data_log_trigger
+    AFTER INSERT OR UPDATE OR DELETE
+    ON user_data
+    FOR EACH ROW
+EXECUTE FUNCTION log_changes();
+
+CREATE TRIGGER product_log_trigger
+    AFTER INSERT OR UPDATE OR DELETE
+    ON product
+    FOR EACH ROW
+EXECUTE FUNCTION log_changes();
+
+CREATE TRIGGER exercise_log_trigger
+    AFTER INSERT OR UPDATE OR DELETE
+    ON exercise
+    FOR EACH ROW
+EXECUTE FUNCTION log_changes();
+
+CREATE TRIGGER dayprogress_product_log_trigger
+    AFTER INSERT OR UPDATE OR DELETE
+    ON dayprogress_product
+    FOR EACH ROW
+EXECUTE FUNCTION log_changes();
+
+CREATE TRIGGER dayprogress_workout_log_trigger
+    AFTER INSERT OR UPDATE OR DELETE
+    ON dayprogress_workout
+    FOR EACH ROW
+EXECUTE FUNCTION log_changes();
+
+CREATE TRIGGER workout_exercise_log_trigger
+    AFTER INSERT OR UPDATE OR DELETE
+    ON workout_exercise
+    FOR EACH ROW
+EXECUTE FUNCTION log_changes();
 
 --
 -- -- -- --

@@ -79,7 +79,7 @@ public class UserService {
         return makeAdmin(userRepository.findById(id).orElseThrow(UnknownUserException::new));
     }
 
-    public boolean makeAdmin(User user) {
+    private boolean makeAdmin(User user) {
         if (user.getRole().toString().equalsIgnoreCase("ADMIN")) {
             logger.warn("Unknown error: " + user.getRole().toString() + " not equals to 'user'");
             return false;

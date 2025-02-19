@@ -28,7 +28,7 @@ const Logs = () => {
         }
 
         fetchGet();
-    }, [offset]);    
+    }, [offset]);
 
     useEffect(() => {
         if (logs.length > 0) {

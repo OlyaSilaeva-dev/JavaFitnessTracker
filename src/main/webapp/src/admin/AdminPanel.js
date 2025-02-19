@@ -9,7 +9,7 @@ const AdminPanel = () => {
         <>
         <NavHeader/>
         <Container className="vw-100 d-block">
-        <h1>Админ панель:</h1>
+        <h1>Панель админа:</h1>
         <AdminTabs/>
         </Container>
         </>

@@ -47,8 +47,7 @@ const AdminListElem = (props) => {
         <Card className = "h-100 d-flex justify-content-between">
             <Card.Body >
                 <Card.Title>{props.user.email}</Card.Title>
-                <Card.Text>{props.user.firstName + ' ' + props.user.lastName}</Card.Text>
-                <Card.Text>{props.user.phoneNumber}</Card.Text>
+                <Card.Text>{props.user.name}</Card.Text>
                 <Card.Text>{props.user.role}</Card.Text>
                 {buttonsAdd()}
                 
