@@ -75,6 +75,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public boolean makeAdmin(Long id) {
         return makeAdmin(userRepository.findById(id).orElseThrow(UnknownUserException::new));
     }
@@ -90,6 +91,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public boolean makeUser(Long id) {
         return makeUser(userRepository.findById(id).orElseThrow(UnknownUserException::new));
     }

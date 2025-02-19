@@ -111,7 +111,7 @@ BEGIN
             COALESCE(NEW.id, OLD.id),
             CURRENT_TIMESTAMP,
             CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(OLD) END,
-            CASE WHEN TG_OP = ('UPDATE', 'INSERT') THEN row_to_json(NEW) END);
+            CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN row_to_json(NEW) END);
     RETURN COALESCE(NEW, OLD);
 END;
 $$ LANGUAGE plpgsql;
